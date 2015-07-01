@@ -14,13 +14,39 @@ namespace Email_Notifications
     /// Используется для хранения настроек и прочих объектов, для которых важно сохранять значение 
     /// при закрытии программы.
     /// </summary>
-    public class PopSettings
+    public class Settings
     {
-        private static string _Server;
-        public string Server
+        private static string _PopServer;
+        public string PopServer
         {
-            get { return _Server; }
-            set { _Server = value; }
+            get { return _PopServer; }
+            set { _PopServer = value; }
+        }
+        private static int _PopPort;
+        public int PopPort
+        {
+            get { return _PopPort; }
+            set { _PopPort = value; }
+        }
+
+        private static string _ImapServer;
+        public string ImapServer
+        {
+            get { return _ImapServer; }
+            set { _ImapServer = value; }
+        }
+        private static int _ImapPort;
+        public int ImapPort
+        {
+            get { return _ImapPort; }
+            set { _ImapPort = value; }
+        }
+
+        private static bool _SSL;
+        public bool SSL
+        {
+            get { return _SSL; }
+            set { _SSL = value; }
         }
         private static string _Adress;
         public string Adress
@@ -34,19 +60,7 @@ namespace Email_Notifications
             get { return _Password; }
             set { _Password = value; }
         }
-        private static int _Port;
-        public int Port
-        {
-            get { return _Port; }
-            set { _Port = value; }
-        }
-        private static bool _SSL;
-        public bool SSL
-        {
-            get { return _SSL; }
-            set { _SSL = value; }
-        }
-
+        
         //значение прошлой проверки сервера на количество сообщений
         //если меньше - вывод оповещения
         public static int _MessageCount;
@@ -56,26 +70,47 @@ namespace Email_Notifications
             set { _MessageCount = value; }
         }
 
+        //-1 до ручного закрытия уведомления
+        private static int _NotificationLiveTimeInSeconds;
+        public int NotificationLiveTimeInSeconds
+        {
+            get { return _NotificationLiveTimeInSeconds; }
+            set { _NotificationLiveTimeInSeconds = value; }
+        }
+        private static int _ServerCheckTimeInMinutes;
+        public int ServerCheckTimeInMinutes
+        {
+            get { return _ServerCheckTimeInMinutes; }
+            set { _ServerCheckTimeInMinutes = value; }
+        }
+        private static bool _NotificationsEnabled;
+        public bool NotificationsEnabled
+        {
+            get { return _NotificationsEnabled; }
+            set { _NotificationsEnabled = value; }
+        }
 
-        private PopSettings()
+
+
+        private Settings()
         {
-            _instance = new PopSettings(1);
+            _instance = new Settings(1);
         }
-        private PopSettings(int i)
+        private Settings(int i)
         {
         }
-        private static PopSettings _instance = new PopSettings();
-        public static PopSettings GetInstance()
+        private static Settings _instance = new Settings();
+        public static Settings GetInstance()
         {
             return _instance;
         }
 
 
-        public static void SaveSettings(PopSettings settin)
+        public static void SaveSettings(Settings settin)
         {
             using(StreamWriter serStrm=new StreamWriter("settings.xml",false,Encoding.Default))
             {
-                XmlSerializer xmlSer = new XmlSerializer(typeof(PopSettings));
+                XmlSerializer xmlSer = new XmlSerializer(typeof(Settings));
                 xmlSer.Serialize(serStrm, (object)settin);
             }
         }
@@ -84,8 +119,8 @@ namespace Email_Notifications
         {
             using (StreamReader serStrm = new StreamReader("settings.xml", Encoding.Default))
             {
-                XmlSerializer xmlSer = new XmlSerializer(typeof(PopSettings));
-                _instance = (PopSettings)xmlSer.Deserialize(serStrm);
+                XmlSerializer xmlSer = new XmlSerializer(typeof(Settings));
+                _instance = (Settings)xmlSer.Deserialize(serStrm);
             }
         }
     }
