@@ -264,6 +264,8 @@ namespace Email_Notifications
             ImapServer = PopServer.Replace("pop", "imap");
             PopPort = 995;
             ImapPort = 993;
+            ServerCheckTimeInMinutes = 1;
+            NotificationLiveTimeInSeconds = 15;
             SSL = true;
         }
 

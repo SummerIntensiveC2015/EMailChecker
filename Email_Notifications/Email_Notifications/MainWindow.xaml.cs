@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Hardcodet.Wpf.TaskbarNotification;
 
 namespace Email_Notifications
 {
@@ -28,6 +29,8 @@ namespace Email_Notifications
         {
             InitializeComponent();
             setLoginPosition();
+            
+            
         }
 
         private void setLoginPosition()
@@ -36,6 +39,12 @@ namespace Email_Notifications
             double screenWidth = SystemParameters.FullPrimaryScreenWidth;
             this.Top = (screenHeight - this.Height);
             this.Left = (screenWidth - (int)(this.Width / 0.93)); 
+        }
+        private void hideForm()
+        {
+            this.Hide();
+            this.ShowInTaskbar = false;
+            this.WindowStyle = System.Windows.WindowStyle.ToolWindow;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -80,9 +89,8 @@ namespace Email_Notifications
             }
             if (count != -1)
             {
-                MessageBox.Show(count.ToString());
-                //делаем трей
-                //SetNotification();
+                Hide();
+                Tray myTray = new Tray();
             }
             
         }
