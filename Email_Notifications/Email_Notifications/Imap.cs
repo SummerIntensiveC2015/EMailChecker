@@ -32,7 +32,7 @@ namespace Email_Notifications
      */
     class Imap
     {
-        private static Settings _CurrentSettings;
+        private Settings _CurrentSettings;
 
         public Imap()
         {
