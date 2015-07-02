@@ -73,7 +73,7 @@ namespace Email_Notifications
             set { _MessageCount = value; }
         }
 
-        //-1 до ручного закрытия уведомления
+        //-1 -- до ручного закрытия уведомления
         private static int _NotificationLiveTimeInSeconds;
         public int NotificationLiveTimeInSeconds
         {

@@ -21,7 +21,7 @@ namespace Email_Notifications
             settin.ImapPort = 993;
             settin.SSL = true;
             Settings.SaveSettings(settin);
-            Imap myCon = new Imap(settin);
+            Imap myCon = new Imap();
             myCon.Connection();
             int count = myCon.Connections.Inbox.Count;
             MimeMessage  m = myCon.DownloadMessage(count-1);
@@ -33,15 +33,10 @@ namespace Email_Notifications
     class Imap
     {
         private static Settings _CurrentSettings;
-        public Settings CurrentSettings
-        {
-            get { return _CurrentSettings; }
-            set { _CurrentSettings = value; }
-        }
 
-        public Imap(Settings youSettings)
+        public Imap()
         {
-            _CurrentSettings = youSettings;
+            _CurrentSettings = Settings.GetInstance();
         }
 
         private static ImapClient _Connection = new ImapClient();
@@ -53,7 +48,7 @@ namespace Email_Notifications
         public void Connection()
         {
             if (!_Connection.IsConnected)
-                _Connection.Connect(_CurrentSettings.ImapServer, _CurrentSettings.ImapPort, _CurrentSettings.SSL);
+                _Connection.Connect(_CurrentSettings.ImapServer, _CurrentSettings.ImapPort, _CurrentSettings.SSL ? SecureSocketOptions.SslOnConnect : SecureSocketOptions.None);
 
             if (!_Connection.IsAuthenticated)
                 _Connection.Authenticate(_CurrentSettings.Adress, _CurrentSettings.Password);
