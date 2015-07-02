@@ -256,6 +256,17 @@ namespace Email_Notifications
             }
         }
 
+        public void setSettings(String username, String password)
+        {
+            Adress = username;
+            Password = password;
+            PopServer = "pop." + Adress.Split('@')[1];
+            ImapServer = PopServer.Replace("pop", "imap");
+            PopPort = 995;
+            ImapPort = 993;
+            SSL = true;
+        }
+
         #region Cryptography methods
         //Note: copypaste from msdn
         private static void Encrypt(XmlDocument Doc, string ElementToEncrypt, string EncryptionElementID, RSA Alg, string KeyName)

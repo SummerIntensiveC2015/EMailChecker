@@ -32,14 +32,14 @@ namespace Email_Notifications
      */
     class Imap
     {
-        private static Settings _CurrentSettings;
+        private Settings _CurrentSettings;
 
         public Imap()
         {
             _CurrentSettings = Settings.GetInstance();
         }
 
-        private static ImapClient _Connection = new ImapClient();
+        private ImapClient _Connection = new ImapClient();
         public ImapClient Connections
         {
             get { return _Connection; }
