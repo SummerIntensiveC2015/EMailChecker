@@ -5,7 +5,7 @@
   Title="SuccessToast" Width="404" Height="97" SizeToContent="Height"
   WindowStyle="None" AllowsTransparency="True" Background="Transparent"  BorderBrush="#FF59A1EA">
 
-    <Grid Name="SuccessToasterInstance">
+    <Grid Name="SuccessToasterInstance" MouseUp="Border_MouseUp">
         <Grid.RowDefinitions>
             <RowDefinition Height="113*"/>
         </Grid.RowDefinitions>
@@ -19,11 +19,10 @@
         <!--</Label>-->
         <TextBlock  HorizontalAlignment="Right" Margin="0,16,311,0" VerticalAlignment="Top" TextAlignment="Center" RenderTransformOrigin="-0.474,0.346" Opacity="0.9" FontWeight="Bold" FontSize="45" Foreground="White" Width="76" Height="66" FontFamily="Segoe UI Semilight"><Run x:Name="autorletter"/></TextBlock>
         <Label Content="Автор:" HorizontalAlignment="Left" Margin="110,16,0,0" VerticalAlignment="Top" Width="52" FontSize="13" Height="29"/>
-        <TextBlock HorizontalAlignment="Left" Margin="165,23,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="145" Height="24"><Run x:Name="autorname"/></TextBlock>
-        <TextBlock HorizontalAlignment="Left" Margin="150,66,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="209" Height="21"><Run x:Name="themetext" Text=""/></TextBlock>
-        <TextBlock HorizontalAlignment="Left" Margin="115,37,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="230" Height="22" FontSize="11" Foreground="#FF665E5E"><Run x:Name="emailtext"/></TextBlock>
-        <Button x:Name="close" Content="X" HorizontalAlignment="Left" Margin="378,5,0,0" VerticalAlignment="Top" Width="17" Height="21" FontFamily="SketchFlow Print" Background="{x:Null}" BorderBrush="{x:Null}" RenderTransformOrigin="0.451,0.032" Click="close_Click" FontSize="14" FontWeight="Bold"/>
-        <Border BorderThickness="1" HorizontalAlignment="Left" Height="92" Margin="5,5,0,0" VerticalAlignment="Top" Width="373" MouseUp="Border_MouseUp"/>
+        <TextBlock HorizontalAlignment="Left" Margin="165,23,0,0"  VerticalAlignment="Top" Width="145" Height="24"><Run x:Name="autorname"/></TextBlock>
+        <TextBlock HorizontalAlignment="Left" Margin="150,66,0,0"  VerticalAlignment="Top" Width="209" Height="21"><Run x:Name="themetext" Text=""/></TextBlock>
+        <TextBlock HorizontalAlignment="Left" Margin="115,37,0,0"  VerticalAlignment="Top" Width="230" Height="22" FontSize="11" Foreground="#FF665E5E"><Run x:Name="emailtext"/></TextBlock>
+        <Button x:Name="close" Content="X" HorizontalAlignment="Left" Margin="382,3,0,0" VerticalAlignment="Top" Width="17" Height="21" FontFamily="SketchFlow Print" Background="{x:Null}" BorderBrush="{x:Null}" RenderTransformOrigin="0.451,0.032" Click="close_Click" FontSize="14" FontWeight="Bold"/>
 
 
         <Grid.RenderTransform>

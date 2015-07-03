@@ -86,14 +86,6 @@ public partial class WarningToaster
 
     private void Border_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-        Process.Start("https:" + email.Split('@')[1]);
+        Process.Start("https://" + email.Split('@')[1]);
     }
-
-
-
-
-    //public static void Toast(string p1, string p2, string p3, string p4, string p5, string p6, short p7, ToasterPosition toasterPosition, ToasterAnimation animation, double margin)
-    //{
-    //    throw new NotImplementedException();
-    //}
 }

@@ -116,13 +116,8 @@ public partial class ErrorToaster
         this.Close();
     }
 
-    private void fullinfo_Click(object sender, System.Windows.RoutedEventArgs e)
-    {
-
-    }
-
     private void Border_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-        Process.Start("https:" + email.Split('@')[1]);
+        Process.Start("https://" + email.Split('@')[1]);
     }
 }

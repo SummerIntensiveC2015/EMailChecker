@@ -10,7 +10,7 @@
         <Button x:Name="buttonClose" Content="X" HorizontalAlignment="Left" Margin="243,0,0,0" VerticalAlignment="Top" Width="45" Height="32" RenderTransformOrigin="0.527,0.225" FontSize="22" FontWeight="Bold" FontStyle="Italic" FontFamily="Segoe UI Black" BorderBrush="White" Background="White" Click="Button_Click"/>
         <Label x:Name="labelLogin" Content="Адрес &#xD;&#xA;почты" HorizontalAlignment="Left" Margin="15,19,0,0" VerticalAlignment="Top" Width="75" FontSize="16"/>
         <Label x:Name="labelPassword" Content="Пароль" HorizontalAlignment="Left" Margin="15,73,0,0" VerticalAlignment="Top" Width="80" FontSize="16"/>
-        <TextBox x:Name="textBoxLogin" HorizontalAlignment="Left" Height="24" Margin="95,32,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="181" FontSize="16"/>
+        <TextBox x:Name="textBoxLogin" HorizontalAlignment="Left" Height="24" Margin="95,32,0,0" VerticalAlignment="Top" Width="181" FontSize="16"/>
         <Button x:Name="buttonLogin" Content="Вход" HorizontalAlignment="Left" Margin="201,109,0,0" VerticalAlignment="Top" Width="75" Height="31" Background="White" BorderBrush="Black" FontSize="20" Click="buttonLogin_Click"/>
         <PasswordBox x:Name="textBoxPassword" HorizontalAlignment="Left" Margin="95,73,0,0" VerticalAlignment="Top" Width="181" Height="31" FontSize="16"/>
     </Grid>

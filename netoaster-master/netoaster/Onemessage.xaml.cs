@@ -72,6 +72,6 @@ public partial class SuccessToaster
 
     private void Border_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-            Process.Start("https:"+email.Split('@')[1]);
+            Process.Start("https://"+email.Split('@')[1]);
     }
 }

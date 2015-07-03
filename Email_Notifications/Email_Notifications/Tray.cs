@@ -100,7 +100,7 @@ namespace Email_Notifications
                 }
                     
             }
-            catch(Exception ex)
+            catch
             {
                 MessageBox.Show("Не удалось загрузить письмо. Уведомления остановлены");
                 timer.Stop();
