@@ -50,8 +50,8 @@ namespace Email_Notifications
             myCurrentImap = new Imap();
             timer = new System.Windows.Threading.DispatcherTimer();
             timer.Tick += new EventHandler(timerTick);
-            //timer.Interval = new TimeSpan(0, Settings.GetInstance().ServerCheckTimeInMinutes, 0);
-            timer.Interval = new TimeSpan(0, 0, 20);
+            timer.Interval = new TimeSpan(0, Settings.GetInstance().ServerCheckTimeInMinutes, 0);
+            //timer.Interval = new TimeSpan(0, 0, 20);
             try
             {
                 myCurrentImap.Connection();
@@ -124,7 +124,7 @@ namespace Email_Notifications
                 WarningToaster.Toast(_addres[countOfElement-1], _name[countOfElement-1], _theme[countOfElement-1], _addres[countOfElement - 2], _name[countOfElement - 2], _theme[countOfElement - 2], Settings.GetInstance().NotificationLiveTimeInSeconds, ToasterPosition.PrimaryScreenBottomRight, animation: ToasterAnimation.FadeIn, margin: 20.0);
                 WarningToaster.email = Settings.GetInstance().Adress;
             }
-            else if (countOfElement==3)
+            else if (countOfElement>=3)
             {
                 ErrorToaster.Toast(_addres[countOfElement - 1], _name[countOfElement - 1], _theme[countOfElement - 1], _addres[countOfElement - 2], _name[countOfElement - 2], _theme[countOfElement - 2], _addres[countOfElement - 3], _name[countOfElement-3], _theme[countOfElement-3], Settings.GetInstance().NotificationLiveTimeInSeconds, countOfElement, ToasterPosition.PrimaryScreenBottomRight, animation: ToasterAnimation.FadeIn, margin: 20.0);
                 ErrorToaster.email = Settings.GetInstance().Adress;
@@ -195,6 +195,8 @@ namespace Email_Notifications
 
         private void Exit(object sender, RoutedEventArgs e)
         {
+            Settings settin = Settings.GetInstance();
+            Settings.SaveSettings(settin);
             Email_Notifications.App.Current.Shutdown();
         }
     }

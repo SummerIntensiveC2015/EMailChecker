@@ -44,7 +44,7 @@ namespace Email_Notifications
                     maxinterval = Settings.GetInstance().ServerCheckTimeInMinutes * 60;
                 if (interval > 0 && interval < maxinterval)
                 {
-                    Settings.GetInstance().ServerCheckTimeInMinutes = interval;
+                    Settings.GetInstance().NotificationLiveTimeInSeconds = interval;
                     this.Hide();
                 }
                 else
