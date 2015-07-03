@@ -22,6 +22,7 @@ namespace Email_Notifications
     /// </summary>
     public partial class FirstLogin : Window
     {
+        private static bool firstLogin = true;
         Settings settin;
         Imap myCon;
         
@@ -50,7 +51,11 @@ namespace Email_Notifications
                 {
                     myCon.Connection();
                     tmpcount = myCon.Connections.Inbox.Count;
-                    Tray myTray = new Tray();
+                    if (firstLogin)
+                    {
+                        Tray myTray = new Tray();
+                        firstLogin = false;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -122,7 +127,11 @@ namespace Email_Notifications
             if (count != -1)
             {
                 Hide();
-                Tray myTray = new Tray();
+                if (firstLogin)
+                {
+                    Tray myTray = new Tray();
+                    firstLogin = false;
+                }
             }
             
         }
