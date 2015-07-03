@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using netoaster;
 
 namespace Email_Notifications
 {
@@ -14,14 +15,17 @@ namespace Email_Notifications
         int count;
         Imap myCurrentImap;
         TaskbarIcon tbiField = new TaskbarIcon();
-        String[] stringsContextMenuField = {"Ваша почта", "Время показа уведомлений", "Частота запросов", "Не беспокоить", "Отключить"};
+        String[] stringsContextMenuField = {"Ваша почта","Указать другую", "Время показа уведомлений", "Частота запросов", "Не беспокоить", "Отключить"};
         Interval myInterval = new Interval();
         SecondsInterval mysInterval = new SecondsInterval();
+        List<String> address = new List<string>(),
+                name = new List<string>(),
+                theme = new List<string>();
 
         public Tray()
         {
-            //tbi.Icon = Resources.Error;
-            tbiField.ToolTipText = "Программа для оповещения о письмах";
+            tbiField.Icon = Properties.Resources.Icon;
+            tbiField.ToolTipText = "Программа работает";
             tbiField.ContextMenu = new System.Windows.Controls.ContextMenu();
             //List<System.Windows.Controls.MenuItem> myItems = new List<System.Windows.Controls.MenuItem>();
             for (int i = 0; i < stringsContextMenuField.Length; i++)
@@ -29,10 +33,10 @@ namespace Email_Notifications
                 System.Windows.Controls.MenuItem item = new System.Windows.Controls.MenuItem();
                 item.Header = stringsContextMenuField[i];
                 if (i == 0) item.Click += OpenBrowser;
-                if (i == 1) item.Click += ShowISecondnterval;
-                if (i == 2) item.Click += ShowInterval;
-                if (i == 3) item.Click += stopTimer;
-                if (i == 4) item.Click += Exit;
+                if (i == 2) item.Click += ShowISecondnterval;
+                if (i == 3) item.Click += ShowInterval;
+                if (i == 4) item.Click += stopTimer;
+                if (i == 5) item.Click += Exit;
                 tbiField.ContextMenu.Items.Add(item);
             }
             timerRun();
@@ -44,8 +48,8 @@ namespace Email_Notifications
             myCurrentImap = new Imap();
             timer = new System.Windows.Threading.DispatcherTimer();
             timer.Tick += new EventHandler(timerTick);
-            timer.Interval = new TimeSpan(0, Settings.GetInstance().ServerCheckTimeInMinutes, 0);
-            //timer.Interval = new TimeSpan(0, 0, 20);
+            //timer.Interval = new TimeSpan(0, Settings.GetInstance().ServerCheckTimeInMinutes, 0);
+            timer.Interval = new TimeSpan(0, 0, 20);
             try
             {
                 myCurrentImap.Connection();
@@ -58,40 +62,74 @@ namespace Email_Notifications
             
             timer.Start();
         }
+
         //Эвент таймера, тут надо показывать зулины сообщения
         private void timerTick(object sender, EventArgs e)
         {
             
             int currentCount = 0;
-            List<MimeKit.MimeMessage> messages = new List<MimeKit.MimeMessage>();
+            
             try
             {
                 myCurrentImap.Disconnection();
                 myCurrentImap.Connection();
                 currentCount = myCurrentImap.Connections.Inbox.Count;
+                //MessageBox.Show(currentCount.ToString());
                 while (currentCount > count)
                 {
-                    
-                    messages.Add(myCurrentImap.DownloadMessage(count));
+
+                    MimeKit.MimeMessage m = new MimeKit.MimeMessage(myCurrentImap.DownloadMessage(count));
                     count++;
+                    
+                    string from = m.From[0].ToString(),
+                    addresFrom = from.Split(' ').Last(); 
+                    address.Add(addresFrom.Substring(1,addresFrom.Length-1));
+                    name.Add(m.From[0].Name);
+                    theme.Add(m.Subject);
+                     
+                    
                 }
+                if (name.Count > 0)
+                {
+                    ShowToaster(address, name, theme);
+                    address.Clear();
+                    name.Clear();
+                    theme.Clear();
+                }
+                    
             }
             catch
             {
-                MessageBox.Show("Не удалось подключиться к почтовому серверу. Уведомления остановлены");
-                messages = null;
+                
+                MessageBox.Show("Не удалось загрузить письмо. Уведомления остановлены");
+
                 timer.Stop();
+                
             }
-            foreach (MimeKit.MimeMessage m in messages)
-            {
-                //тема
-                MessageBox.Show(m.Subject);
-                //имя отправителя
-                MessageBox.Show(m.From[0].Name);
-                //адрес
-                MessageBox.Show(m.From[0].ToString());
-            }
+
             
+            
+            
+        }
+
+        private void ShowToaster(List<string> _addres, List<string> _name, List<string> _theme)
+        {
+            int countOfElement = _addres.Count;
+            if (countOfElement == 1)
+            {
+                SuccessToaster.Toast(_addres[0], _name[0], _theme[0], Settings.GetInstance().NotificationLiveTimeInSeconds, ToasterPosition.PrimaryScreenBottomRight, animation: ToasterAnimation.FadeIn, margin: 20.0);
+                SuccessToaster.email = Settings.GetInstance().Adress;
+            }
+            else if (countOfElement == 2)
+            {
+                WarningToaster.Toast(_addres[countOfElement], _name[countOfElement], _theme[countOfElement], _addres[countOfElement - 1], _name[countOfElement - 1], _theme[countOfElement - 1], Settings.GetInstance().NotificationLiveTimeInSeconds, ToasterPosition.PrimaryScreenBottomRight, animation: ToasterAnimation.FadeIn, margin: 20.0);
+                WarningToaster.email = Settings.GetInstance().Adress;
+            }
+            else if (countOfElement==3)
+            {
+                ErrorToaster.Toast(_addres[countOfElement], _name[countOfElement], _theme[countOfElement], _addres[countOfElement - 1], _name[countOfElement - 1], _theme[countOfElement - 1], _addres[countOfElement - 2], _name[countOfElement - 2], _theme[countOfElement - 2], Settings.GetInstance().NotificationLiveTimeInSeconds, countOfElement, ToasterPosition.PrimaryScreenBottomRight, animation: ToasterAnimation.FadeIn, margin: 20.0);
+                ErrorToaster.email = Settings.GetInstance().Adress;
+            }          
             
         }
 
@@ -110,7 +148,18 @@ namespace Email_Notifications
 
         private void stopTimer(object sender, RoutedEventArgs e)
         {
-            timer.Stop();
+            if (timer.IsEnabled)
+            {
+                timer.Stop();
+                tbiField.ToolTipText = "Программа остановлена";
+            }
+            else
+            {
+                tbiField.ToolTipText = "Программа работает";
+                timer.Interval = new TimeSpan(0, Settings.GetInstance().ServerCheckTimeInMinutes, 0);
+                timer.Start();
+            }
+            
 
         }
 

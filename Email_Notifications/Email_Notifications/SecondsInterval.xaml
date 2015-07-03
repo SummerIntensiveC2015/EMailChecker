@@ -1,7 +1,7 @@
 ﻿<Window x:Class="Email_Notifications.SecondsInterval"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="SecondsInterval" Height="98.876" Width="300" WindowStyle="None">
+        Title="SecondsInterval" Height="98.876" Width="300" WindowStyle="None" ShowInTaskbar="False" ResizeMode="NoResize">
     <Grid Margin="0,0,0,2">
         <Button x:Name="buttonClose" Content="X" HorizontalAlignment="Left" Margin="243,0,0,0" VerticalAlignment="Top" Width="45" Height="32" RenderTransformOrigin="0.527,0.225" FontSize="22" FontWeight="Bold" FontStyle="Italic" FontFamily="Segoe UI Black" BorderBrush="White" Background="White" Click="Button_Click"/>
         <Label Content="Задайте время:" HorizontalAlignment="Left" Margin="29,10,0,0" VerticalAlignment="Top" FontSize="16"/>

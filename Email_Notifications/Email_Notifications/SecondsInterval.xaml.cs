@@ -25,27 +25,37 @@ namespace Email_Notifications
             texBotInterval.Text = Settings.GetInstance().NotificationLiveTimeInSeconds.ToString();
             this.ShowInTaskbar = false;
             this.WindowStyle = System.Windows.WindowStyle.None;
+            setPosition();
+        }
+
+        private void setPosition()
+        {
+            double screenHeight = SystemParameters.FullPrimaryScreenHeight;
+            double screenWidth = SystemParameters.FullPrimaryScreenWidth;
+            this.Top = (screenHeight - this.Height);
+            this.Left = (screenWidth - (int)(this.Width / 0.93));
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                int interval = int.Parse(texBotInterval.Text);
-                if (interval > 0)
+                int interval = int.Parse(texBotInterval.Text),
+                    maxinterval = Settings.GetInstance().ServerCheckTimeInMinutes * 60;
+                if (interval > 0 && interval < maxinterval)
                 {
                     Settings.GetInstance().ServerCheckTimeInMinutes = interval;
                     this.Hide();
                 }
                 else
                 {
-                    MessageBox.Show("Введите целое число > 0");
+                    MessageBox.Show("Введите целое число > 0 и < "+maxinterval);
                 }
 
             }
             catch
             {
-                MessageBox.Show("Введите целое число > 0");
+                MessageBox.Show("Введите корректное число");
             }
         }
     }

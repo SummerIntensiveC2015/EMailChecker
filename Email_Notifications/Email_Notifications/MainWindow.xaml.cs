@@ -28,8 +28,33 @@ namespace Email_Notifications
         public FirstLogin()
         {
             InitializeComponent();
+            this.Hide();
             setLoginPosition();
+            Auth();
             
+        }
+        private void Auth()
+        {
+            Settings.LoadSettings();
+            Settings tmp = Settings.GetInstance();
+            int tmpcount = -1;
+            if (tmp.Adress.Length != 0)
+            {
+                myCon = new Imap();
+                try
+                {
+                    myCon.Connection();
+                    tmpcount = myCon.Connections.Inbox.Count;
+                    Tray myTray = new Tray();
+                }
+                catch 
+                {
+                    this.Show();
+                }
+            
+            }
+           
+           
             
         }
 

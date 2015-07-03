@@ -25,6 +25,15 @@ namespace Email_Notifications
             texBotInterval.Text = Settings.GetInstance().ServerCheckTimeInMinutes.ToString();
             this.ShowInTaskbar = false;
             this.WindowStyle = System.Windows.WindowStyle.None;
+            setPosition();
+        }
+
+        private void setPosition()
+        {
+            double screenHeight = SystemParameters.FullPrimaryScreenHeight;
+            double screenWidth = SystemParameters.FullPrimaryScreenWidth;
+            this.Top = (screenHeight - this.Height);
+            this.Left = (screenWidth - (int)(this.Width / 0.93));
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
