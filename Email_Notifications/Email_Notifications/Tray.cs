@@ -106,7 +106,6 @@ namespace Email_Notifications
             {
                 MessageBox.Show("Не удалось загрузить письмо. Уведомления остановлены");
                 timer.Stop();
-                
             }
 
             

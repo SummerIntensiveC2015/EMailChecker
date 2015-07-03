@@ -93,7 +93,7 @@ namespace Email_Notifications
             if (CorrectLogin && CorrectPassword)
             {
                 settin = Settings.GetInstance();
-                settin.setSettings(textBoxLogin.Text, textBoxPassword.Text);
+                settin.setSettings(textBoxLogin.Text, textBoxPassword.Password);
                 myCon = new Imap();
                 try
                 {
