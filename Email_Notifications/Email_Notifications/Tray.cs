@@ -1,4 +1,5 @@
 ﻿#define DEBUG
+#define RELEASE
 using Hardcodet.Wpf.TaskbarNotification;
 using System;
 using System.Collections.Generic;
@@ -103,11 +104,7 @@ namespace Email_Notifications
             }
             catch(Exception ex)
             {
-#if (!DEBUG)
                 MessageBox.Show("Не удалось загрузить письмо. Уведомления остановлены");
-#else
-                MessageBox.Show(ex.ToString());
-#endif
                 timer.Stop();
                 
             }
@@ -163,15 +160,15 @@ namespace Email_Notifications
             {
                 timer.Stop();
                 tbiField.ToolTipText = "Программа остановлена";
+                (tbiField.ContextMenu.Items[4] as System.Windows.Controls.MenuItem).Header = "Включить оповещения";
             }
             else
             {
                 tbiField.ToolTipText = "Программа работает";
+                (tbiField.ContextMenu.Items[4] as System.Windows.Controls.MenuItem).Header = "Не беспокоить";
                 timer.Interval = new TimeSpan(0, Settings.GetInstance().ServerCheckTimeInMinutes, 0);
                 timer.Start();
             }
-            
-
         }
 
         private void ShowISecondnterval(object sender, RoutedEventArgs e)
