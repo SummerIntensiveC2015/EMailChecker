@@ -37,6 +37,9 @@
     <Reference Include="BouncyCastle">
       <HintPath>..\packages\MimeKit.1.2.6.0\lib\net45\BouncyCastle.dll</HintPath>
     </Reference>
+    <Reference Include="Hardcodet.Wpf.TaskbarNotification">
+      <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.5\lib\net45\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
+    </Reference>
     <Reference Include="MailKit">
       <HintPath>..\packages\MailKit.1.2.6.0\lib\net45\MailKit.dll</HintPath>
     </Reference>
@@ -45,6 +48,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Security" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -65,7 +69,18 @@
     </ApplicationDefinition>
     <Compile Include="Imap.cs" />
     <Compile Include="Pop.cs" />
+    <Compile Include="Interval.xaml.cs">
+      <DependentUpon>Interval.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SecondsInterval.xaml.cs">
+      <DependentUpon>SecondsInterval.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings.cs" />
+    <Compile Include="Tray.cs" />
+    <Page Include="Interval.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -78,6 +93,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="SecondsInterval.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -106,6 +125,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\netoaster-master\netoaster\netoaster.csproj">
+      <Project>{211d37ef-74f8-4e4f-9ed0-da4566f423f5}</Project>
+      <Name>netoaster</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

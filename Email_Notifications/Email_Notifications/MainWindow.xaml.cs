@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Hardcodet.Wpf.TaskbarNotification;
 
 namespace Email_Notifications
 {
@@ -21,13 +22,52 @@ namespace Email_Notifications
     /// </summary>
     public partial class FirstLogin : Window
     {
+        private static bool firstLogin = true;
         Settings settin;
         Imap myCon;
         
         public FirstLogin()
         {
             InitializeComponent();
+            this.Hide();
             setLoginPosition();
+            Auth();
+            
+        }
+        private void Auth()
+        {
+            try
+            {
+                Settings.LoadSettings();
+            }
+            catch
+            {
+            }
+            int tmpcount = -1;
+            if (Settings.GetInstance().Adress != null)
+            {
+                myCon = new Imap();
+                try
+                {
+                    myCon.Connection();
+                    tmpcount = myCon.Connections.Inbox.Count;
+                    if (firstLogin)
+                    {
+                        Tray myTray = new Tray();
+                        firstLogin = false;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                    this.Show();
+                }
+
+            }
+            else
+            {
+                this.Show();
+            }
         }
 
         private void setLoginPosition()
@@ -36,6 +76,12 @@ namespace Email_Notifications
             double screenWidth = SystemParameters.FullPrimaryScreenWidth;
             this.Top = (screenHeight - this.Height);
             this.Left = (screenWidth - (int)(this.Width / 0.93)); 
+        }
+        private void hideForm()
+        {
+            this.Hide();
+            this.ShowInTaskbar = false;
+            this.WindowStyle = System.Windows.WindowStyle.ToolWindow;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -47,12 +93,12 @@ namespace Email_Notifications
         {
             
             bool CorrectLogin = (textBoxLogin.Text.Length>5 && textBoxLogin.Text.Length<50 && textBoxLogin.Text.Contains('@')),
-                CorrectPassword = (textBoxLogin.Text.Length>3 && textBoxLogin.Text.Length<50);
+                CorrectPassword = (textBoxPassword.Password.Length > 3 && textBoxPassword.Password.Length < 50);
             int count = -1;
             if (CorrectLogin && CorrectPassword)
             {
                 settin = Settings.GetInstance();
-                settin.setSettings(textBoxLogin.Text, textBoxPassword.Text);
+                settin.setSettings(textBoxLogin.Text, textBoxPassword.Password);
                 myCon = new Imap();
                 try
                 {
@@ -80,9 +126,12 @@ namespace Email_Notifications
             }
             if (count != -1)
             {
-                MessageBox.Show(count.ToString());
-                //делаем трей
-                //SetNotification();
+                Hide();
+                if (firstLogin)
+                {
+                    Tray myTray = new Tray();
+                    firstLogin = false;
+                }
             }
             
         }
