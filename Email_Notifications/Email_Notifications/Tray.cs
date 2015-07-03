@@ -1,4 +1,5 @@
-﻿using Hardcodet.Wpf.TaskbarNotification;
+﻿#define DEBUG
+using Hardcodet.Wpf.TaskbarNotification;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using netoaster;
+using MimeKit;
 
 namespace Email_Notifications
 {
@@ -15,7 +17,7 @@ namespace Email_Notifications
         int count;
         Imap myCurrentImap;
         TaskbarIcon tbiField = new TaskbarIcon();
-        String[] stringsContextMenuField = {"Ваша почта","Указать другую", "Время показа уведомлений", "Частота запросов", "Не беспокоить", "Отключить"};
+        String[] stringsContextMenuField = { "Ваша почта", "Смена почты", "Время показа уведомлений", "Частота запросов", "Не беспокоить", "Выход" };
         Interval myInterval = new Interval();
         SecondsInterval mysInterval = new SecondsInterval();
         List<String> address = new List<string>(),
@@ -33,6 +35,7 @@ namespace Email_Notifications
                 System.Windows.Controls.MenuItem item = new System.Windows.Controls.MenuItem();
                 item.Header = stringsContextMenuField[i];
                 if (i == 0) item.Click += OpenBrowser;
+                if (i == 1) item.Click += PostChange;
                 if (i == 2) item.Click += ShowISecondnterval;
                 if (i == 3) item.Click += ShowInterval;
                 if (i == 4) item.Click += stopTimer;
@@ -40,7 +43,7 @@ namespace Email_Notifications
                 tbiField.ContextMenu.Items.Add(item);
             }
             timerRun();
-            
+
         }
 
         private void timerRun()
@@ -78,7 +81,7 @@ namespace Email_Notifications
                 while (currentCount > count)
                 {
 
-                    MimeKit.MimeMessage m = new MimeKit.MimeMessage(myCurrentImap.DownloadMessage(count));
+                    MimeMessage m = myCurrentImap.DownloadMessage(count);
                     count++;
                     
                     string from = m.From[0].ToString(),
@@ -98,11 +101,13 @@ namespace Email_Notifications
                 }
                     
             }
-            catch
+            catch(Exception ex)
             {
-                
+#if (!DEBUG)
                 MessageBox.Show("Не удалось загрузить письмо. Уведомления остановлены");
-
+#else
+                MessageBox.Show(ex.ToString());
+#endif
                 timer.Stop();
                 
             }
@@ -122,12 +127,12 @@ namespace Email_Notifications
             }
             else if (countOfElement == 2)
             {
-                WarningToaster.Toast(_addres[countOfElement], _name[countOfElement], _theme[countOfElement], _addres[countOfElement - 1], _name[countOfElement - 1], _theme[countOfElement - 1], Settings.GetInstance().NotificationLiveTimeInSeconds, ToasterPosition.PrimaryScreenBottomRight, animation: ToasterAnimation.FadeIn, margin: 20.0);
+                WarningToaster.Toast(_addres[countOfElement-1], _name[countOfElement-1], _theme[countOfElement-1], _addres[countOfElement - 2], _name[countOfElement - 2], _theme[countOfElement - 2], Settings.GetInstance().NotificationLiveTimeInSeconds, ToasterPosition.PrimaryScreenBottomRight, animation: ToasterAnimation.FadeIn, margin: 20.0);
                 WarningToaster.email = Settings.GetInstance().Adress;
             }
             else if (countOfElement==3)
             {
-                ErrorToaster.Toast(_addres[countOfElement], _name[countOfElement], _theme[countOfElement], _addres[countOfElement - 1], _name[countOfElement - 1], _theme[countOfElement - 1], _addres[countOfElement - 2], _name[countOfElement - 2], _theme[countOfElement - 2], Settings.GetInstance().NotificationLiveTimeInSeconds, countOfElement, ToasterPosition.PrimaryScreenBottomRight, animation: ToasterAnimation.FadeIn, margin: 20.0);
+                ErrorToaster.Toast(_addres[countOfElement - 1], _name[countOfElement - 1], _theme[countOfElement - 1], _addres[countOfElement - 2], _name[countOfElement - 2], _theme[countOfElement - 2], _addres[countOfElement - 3], _name[countOfElement-3], _theme[countOfElement-3], Settings.GetInstance().NotificationLiveTimeInSeconds, countOfElement, ToasterPosition.PrimaryScreenBottomRight, animation: ToasterAnimation.FadeIn, margin: 20.0);
                 ErrorToaster.email = Settings.GetInstance().Adress;
             }          
             
@@ -144,6 +149,12 @@ namespace Email_Notifications
                 MessageBox.Show("Не удается запустить браузер");
             }
             
+        }
+
+        private void PostChange(object sender, RoutedEventArgs e)
+        {
+            FirstLogin fl = new FirstLogin();
+            fl.Show();
         }
 
         private void stopTimer(object sender, RoutedEventArgs e)

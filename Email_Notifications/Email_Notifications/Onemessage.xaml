@@ -1,0 +1,34 @@
+﻿<Window x:Name="window"
+    x:Class="SuccessToaster"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  Title="SuccessToast" Width="404" Height="97" SizeToContent="Height"
+  WindowStyle="None" AllowsTransparency="True" Background="Transparent"  BorderBrush="#FF59A1EA">
+
+  <Grid Name="SuccessToasterInstance">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="113*"/>
+        </Grid.RowDefinitions>
+
+
+        <!-- Notification area -->
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="97" Margin="5,0,0,0" VerticalAlignment="Top" Width="102" Background="#FF998888"/>
+        <Border BorderThickness="5,3"  Background="White" CornerRadius="5" Opacity="0.85" BorderBrush="#FF359ECF" />
+        <Ellipse x:Name="avatar" Fill="#FF719F3F" HorizontalAlignment="Left" Height="71" Margin="17,12,0,0" Stroke="White" VerticalAlignment="Top" Width="76"/>
+        <Label Content="Тема:" HorizontalAlignment="Left" Margin="110,60,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.474,0.346" FontSize="13" Height="27" Width="42"/>
+        <!--</Label>-->
+        <TextBlock  HorizontalAlignment="Right" Margin="0,16,311,0" VerticalAlignment="Top" TextAlignment="Center" RenderTransformOrigin="-0.474,0.346" Opacity="0.9" FontWeight="Bold" FontSize="45" Foreground="White" Width="76" Height="66" FontFamily="Segoe UI Semilight"><Run x:Name="autorletter"/></TextBlock>
+        <Label Content="Автор:" HorizontalAlignment="Left" Margin="110,16,0,0" VerticalAlignment="Top" Width="52" FontSize="13" Height="29"/>
+        <TextBlock HorizontalAlignment="Left" Margin="165,23,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="145" Height="24"><Run x:Name="autorname"/></TextBlock>
+        <TextBlock HorizontalAlignment="Left" Margin="150,66,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="209" Height="21"><Run x:Name="themetext" Text=""/></TextBlock>
+        <TextBlock HorizontalAlignment="Left" Margin="115,37,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="230" Height="22" FontSize="11" Foreground="#FF665E5E"><Run x:Name="emailtext"/></TextBlock>
+        <Button x:Name="close" Content="X" HorizontalAlignment="Left" Margin="378,5,0,0" VerticalAlignment="Top" Width="17" Height="21" FontFamily="SketchFlow Print" Background="{x:Null}" BorderBrush="{x:Null}" RenderTransformOrigin="0.451,0.032" Click="close_Click" FontSize="14" FontWeight="Bold"/>
+
+
+        <Grid.RenderTransform>
+        <ScaleTransform ScaleY="1" />
+    </Grid.RenderTransform>
+
+  </Grid>
+
+</Window>

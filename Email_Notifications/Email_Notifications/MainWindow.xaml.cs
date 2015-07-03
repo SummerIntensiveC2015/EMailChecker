@@ -35,10 +35,15 @@ namespace Email_Notifications
         }
         private void Auth()
         {
-            Settings.LoadSettings();
-            Settings tmp = Settings.GetInstance();
+            try
+            {
+                Settings.LoadSettings();
+            }
+            catch
+            {
+            }
             int tmpcount = -1;
-            if (tmp.Adress.Length != 0)
+            if (Settings.GetInstance().Adress != null)
             {
                 myCon = new Imap();
                 try
@@ -47,15 +52,17 @@ namespace Email_Notifications
                     tmpcount = myCon.Connections.Inbox.Count;
                     Tray myTray = new Tray();
                 }
-                catch 
+                catch (Exception ex)
                 {
+                    MessageBox.Show(ex.ToString());
                     this.Show();
                 }
-            
+
             }
-           
-           
-            
+            else
+            {
+                this.Show();
+            }
         }
 
         private void setLoginPosition()

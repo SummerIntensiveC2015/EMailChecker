@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<Settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <PopServer>pop.mail.ru</PopServer>
+  <PopPort>995</PopPort>
+  <ImapServer>imap.mail.ru</ImapServer>
+  <ImapPort>993</ImapPort>
+  <SSL>true</SSL>
+  <EncryptedData Id="EncryptedElement2" Type="http://www.w3.org/2001/04/xmlenc#Element" xmlns="http://www.w3.org/2001/04/xmlenc#"><EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#aes256-cbc" /><KeyInfo xmlns="http://www.w3.org/2000/09/xmldsig#"><EncryptedKey xmlns="http://www.w3.org/2001/04/xmlenc#"><EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#rsa-1_5" /><KeyInfo xmlns="http://www.w3.org/2000/09/xmldsig#"><KeyName>rsaKey</KeyName></KeyInfo><CipherData><CipherValue>pJ7daWofXFuWMqDVOwoygpVt1ijzS+eblz4zKc34lRHYNlkkPOBCa8MoUhjQVPhpewq/Xz9a3e8gl7fXiBn2Z4dZSbVR6reQthyUDYhNuHXYzBl75UWqcnv2mel0XEppwNKr/nqAm4L1dehHwlND58QAcwm5ojRkDCGaPVOB8SI=</CipherValue></CipherData><ReferenceList><DataReference URI="#EncryptedElement2" /></ReferenceList></EncryptedKey></KeyInfo><CipherData><CipherValue>c9h949B2N2N72NmVbHHQJKgQ8+UL7hja6qppiQjjwRPeFYaVTUevJ64syt6E46YWDNQt8ddWqR9W7fvpjXbblZO/zdKi89C1Ed9/Vz3wJFI=</CipherValue></CipherData></EncryptedData>
+  <EncryptedData Id="EncryptedElement1" Type="http://www.w3.org/2001/04/xmlenc#Element" xmlns="http://www.w3.org/2001/04/xmlenc#"><EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#aes256-cbc" /><KeyInfo xmlns="http://www.w3.org/2000/09/xmldsig#"><EncryptedKey xmlns="http://www.w3.org/2001/04/xmlenc#"><EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#rsa-1_5" /><KeyInfo xmlns="http://www.w3.org/2000/09/xmldsig#"><KeyName>rsaKey</KeyName></KeyInfo><CipherData><CipherValue>FA0u6IU9DBOlJ1LiMxu9ItTrJxDfLD9QQxuV9b3OAYi5FLAXznPuTsL6JPrh2yj01u2bRDcAamVNBU8/XjWPj3+eFmgdjBho4RtklCeB4SNm/zf0Qh11lEADKhKay8FRwQMTkUf9iaPfbxx+UkJMZcRtBBHSZjY5zVuVBfbfg8k=</CipherValue></CipherData><ReferenceList><DataReference URI="#EncryptedElement1" /></ReferenceList></EncryptedKey></KeyInfo><CipherData><CipherValue>GtFXcoUUiYJ44o9wcuNYZ/ObRg03z5UwSLLaVj/V3zG18MUl68d+UppAx4s/7Hd5</CipherValue></CipherData></EncryptedData>
+  <MessageCount>0</MessageCount>
+  <NotificationLiveTimeInSeconds>0</NotificationLiveTimeInSeconds>
+  <ServerCheckTimeInMinutes>0</ServerCheckTimeInMinutes>
+  <NotificationsEnabled>false</NotificationsEnabled>
+</Settings>

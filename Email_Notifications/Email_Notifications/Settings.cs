@@ -129,7 +129,7 @@ namespace Email_Notifications
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                throw ex;
             }
 
             // Create a new CspParameters object to specify
@@ -153,7 +153,8 @@ namespace Email_Notifications
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                rsaKey.Clear();
+                throw ex;
             }
             finally
             {
@@ -175,7 +176,7 @@ namespace Email_Notifications
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                throw ex;
             }
 
             // Create a new CspParameters object to specify
@@ -195,7 +196,8 @@ namespace Email_Notifications
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                rsaKey.Clear();
+                throw ex;
             }
             finally
             {
@@ -247,7 +249,8 @@ namespace Email_Notifications
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                rsaKey.Clear();
+                throw ex;
             }
             finally
             {
