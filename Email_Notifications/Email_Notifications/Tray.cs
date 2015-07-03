@@ -1,6 +1,4 @@
-﻿#define DEBUG
-#define RELEASE
-using Hardcodet.Wpf.TaskbarNotification;
+﻿using Hardcodet.Wpf.TaskbarNotification;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -138,13 +136,27 @@ namespace Email_Notifications
         {
             try
             {
-                System.Diagnostics.Process.Start("http://" + Settings.GetInstance().Adress.Split('@')[1]);
+                switch (Settings.GetInstance().Adress.Split('@')[1])
+                {
+                    case "yandex.ru":
+                        System.Diagnostics.Process.Start("https://mail.yandex.ru/");
+                        break;
+                    case "gmail.com":
+                        System.Diagnostics.Process.Start("https://mail.google.com");
+                        break;
+                    case "mail.ru":
+                        System.Diagnostics.Process.Start("https://e.mail.ru");
+                        break;
+                    default:
+                        System.Diagnostics.Process.Start("https://" + Settings.GetInstance().Adress.Split('@')[1]);
+                        break;
+                }
             }
             catch
             {
                 MessageBox.Show("Не удается запустить браузер");
             }
-            
+
         }
 
         private void PostChange(object sender, RoutedEventArgs e)

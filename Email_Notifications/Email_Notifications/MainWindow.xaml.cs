@@ -88,7 +88,7 @@ namespace Email_Notifications
         {
             
             bool CorrectLogin = (textBoxLogin.Text.Length>5 && textBoxLogin.Text.Length<50 && textBoxLogin.Text.Contains('@')),
-                CorrectPassword = (textBoxLogin.Text.Length>3 && textBoxLogin.Text.Length<50);
+                CorrectPassword = (textBoxPassword.Password.Length > 3 && textBoxPassword.Password.Length < 50);
             int count = -1;
             if (CorrectLogin && CorrectPassword)
             {
