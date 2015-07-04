@@ -32,7 +32,11 @@ namespace Email_Notifications
             this.Hide();
             setLoginPosition();
             Auth();
-            
+            if (!firstLogin)
+            {
+                textBoxLogin.Text = Settings.GetInstance().Adress;
+                textBoxPassword.Password = Settings.GetInstance().Password;
+            }            
         }
         private void Auth()
         {
