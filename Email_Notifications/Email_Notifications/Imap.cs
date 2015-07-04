@@ -51,7 +51,7 @@ namespace Email_Notifications
                 _Connection.Connect(_CurrentSettings.ImapServer, _CurrentSettings.ImapPort, _CurrentSettings.SSL ? SecureSocketOptions.SslOnConnect : SecureSocketOptions.None);
 
             if (!_Connection.IsAuthenticated)
-                _Connection.Authenticate(_CurrentSettings.Adress, _CurrentSettings.Password);
+                _Connection.Authenticate(Settings._Adress, Settings._Password);
             if (!_Connection.Inbox.IsOpen)
                 _Connection.Inbox.Open(FolderAccess.ReadOnly);
         }

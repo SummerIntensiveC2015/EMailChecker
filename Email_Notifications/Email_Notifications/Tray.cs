@@ -51,7 +51,6 @@ namespace Email_Notifications
             timer = new System.Windows.Threading.DispatcherTimer();
             timer.Tick += new EventHandler(timerTick);
             timer.Interval = new TimeSpan(0, Settings.GetInstance().ServerCheckTimeInMinutes, 0);
-            //timer.Interval = new TimeSpan(0, 0, 20);
             try
             {
                 myCurrentImap.Connection();
@@ -76,7 +75,6 @@ namespace Email_Notifications
                 myCurrentImap.Disconnection();
                 myCurrentImap.Connection();
                 currentCount = myCurrentImap.Connections.Inbox.Count;
-                //MessageBox.Show(currentCount.ToString());
                 while (currentCount > count)
                 {
 

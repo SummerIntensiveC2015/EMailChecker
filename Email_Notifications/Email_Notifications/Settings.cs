@@ -10,6 +10,7 @@ using System.Xml.Serialization;
 using System.Security.Cryptography;
 using System.Security.Cryptography.Xml;
 using System.Windows;
+using System.Management;
 
 namespace Email_Notifications
 {
@@ -19,6 +20,9 @@ namespace Email_Notifications
     /// </summary>
     public class Settings
     {
+        public static byte[] Key = GetKey();
+        public static byte[] IV = GetKey();
+
         private static string _PopServer;
         public string PopServer
         {
@@ -51,17 +55,17 @@ namespace Email_Notifications
             get { return _SSL; }
             set { _SSL = value; }
         }
-        private static string _Adress;
+        public static string _Adress;
         public string Adress
         {
-            get { return _Adress; }
-            set { _Adress = value; }
+            get { return Encrypt(_Adress); }
+            set { _Adress = Decrypt(value); }
         }
-        private static string _Password;
+        public static string _Password;
         public string Password
         {
-            get { return _Password; }
-            set { _Password = value; }
+            get { return Encrypt(_Password); }
+            set { _Password = Decrypt(value); }
         }
 
         //значение прошлой проверки сервера на количество сообщений
@@ -108,7 +112,18 @@ namespace Email_Notifications
             return _instance;
         }
 
-
+        public static void setSettings(String username, String password)
+        {
+            _Adress = username;
+            _Password = password;
+            _instance.PopServer = "pop." + _Adress.Split('@')[1];
+            _instance.ImapServer = _instance.PopServer.Replace("pop", "imap");
+            _instance.PopPort = 995;
+            _instance.ImapPort = 993;
+            _instance.ServerCheckTimeInMinutes = 1;
+            _instance.NotificationLiveTimeInSeconds = 15;
+            _instance.SSL = true;
+        }
         public static void SaveSettings(Settings settin)
         {
             using (StreamWriter serStrm = new StreamWriter("settings.xml", false, Encoding.Default))
@@ -116,302 +131,129 @@ namespace Email_Notifications
                 XmlSerializer xmlSer = new XmlSerializer(typeof(Settings));
                 xmlSer.Serialize(serStrm, (object)settin);
             }
-            /////////////////////////////////////////////////
-            
-            // Create an XmlDocument object.
-            XmlDocument xmlDoc = new XmlDocument();
-
-            // Load an XML file into the XmlDocument object.
-            try
-            {
-                xmlDoc.PreserveWhitespace = true;
-                xmlDoc.Load("settings.xml");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            // Create a new CspParameters object to specify
-            // a key container.
-            CspParameters cspParams = new CspParameters();
-            cspParams.KeyContainerName = "XML_ENC_RSA_KEY";
-
-            // Create a new RSA key and save it in the container.  This key will encrypt
-            // a symmetric key, which will then be encryped in the XML document.
-            RSACryptoServiceProvider rsaKey = new RSACryptoServiceProvider(cspParams);
-
-            try
-            {
-                // Encrypt the "Password" element.
-                Encrypt(xmlDoc, "Password", "EncryptedElement1", rsaKey, "rsaKey");
-                Encrypt(xmlDoc, "Adress", "EncryptedElement2", rsaKey, "rsaKey");
-
-
-                // Save the XML document.
-                xmlDoc.Save("settings.xml");
-            }
-            catch (Exception ex)
-            {
-                rsaKey.Clear();
-                throw ex;
-            }
-            finally
-            {
-                // Clear the RSA key.
-                rsaKey.Clear();
-            }
         }
-
         public static void LoadSettings()
         {
-            // Create an XmlDocument object.
-            XmlDocument xmlDoc = new XmlDocument();
-
-            // Load an XML file into the XmlDocument object.
-            try
-            {
-                xmlDoc.PreserveWhitespace = true;
-                xmlDoc.Load("settings.xml");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            // Create a new CspParameters object to specify
-            // a key container.
-            CspParameters cspParams = new CspParameters();
-            cspParams.KeyContainerName = "XML_ENC_RSA_KEY";
-
-            // Create a new RSA key and save it in the container.  This key will encrypt
-            // a symmetric key, which will then be encryped in the XML document.
-            RSACryptoServiceProvider rsaKey = new RSACryptoServiceProvider(cspParams);
-
-            try
-            {
-                Decrypt(xmlDoc, rsaKey, "rsaKey");
-                Decrypt(xmlDoc, rsaKey, "rsaKey");
-                xmlDoc.Save("settings.xml");
-            }
-            catch (Exception ex)
-            {
-                rsaKey.Clear();
-                throw ex;
-            }
-            finally
-            {
-                // Clear the RSA key.
-                rsaKey.Clear();
-            }
-
-
-            //////////////////////////////////
             using (StreamReader serStrm = new StreamReader("settings.xml", Encoding.Default))
             {
                 XmlSerializer xmlSer = new XmlSerializer(typeof(Settings));
                 _instance = (Settings)xmlSer.Deserialize(serStrm);
             }
-            /////////////////////////////////////////////////
-
-            // Create an XmlDocument object.
-            xmlDoc = new XmlDocument();
-
-            // Load an XML file into the XmlDocument object.
-            try
-            {
-                xmlDoc.PreserveWhitespace = true;
-                xmlDoc.Load("settings.xml");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-
-            // Create a new CspParameters object to specify
-            // a key container.
-            cspParams = new CspParameters();
-            cspParams.KeyContainerName = "XML_ENC_RSA_KEY";
-
-            // Create a new RSA key and save it in the container.  This key will encrypt
-            // a symmetric key, which will then be encryped in the XML document.
-            rsaKey = new RSACryptoServiceProvider(cspParams);
-
-            try
-            {
-                // Encrypt the "Password" element.
-                Encrypt(xmlDoc, "Password", "EncryptedElement1", rsaKey, "rsaKey");
-                Encrypt(xmlDoc, "Adress", "EncryptedElement2", rsaKey, "rsaKey");
-
-
-                // Save the XML document.
-                xmlDoc.Save("settings.xml");
-            }
-            catch (Exception ex)
-            {
-                rsaKey.Clear();
-                throw ex;
-            }
-            finally
-            {
-                // Clear the RSA key.
-                rsaKey.Clear();
-            }
-        }
-
-        public void setSettings(String username, String password)
-        {
-            Adress = username;
-            Password = password;
-            PopServer = "pop." + Adress.Split('@')[1];
-            ImapServer = PopServer.Replace("pop", "imap");
-            PopPort = 995;
-            ImapPort = 993;
-            ServerCheckTimeInMinutes = 1;
-            NotificationLiveTimeInSeconds = 15;
-            SSL = true;
         }
 
         #region Cryptography methods
-        //Note: copypaste from msdn
-        private static void Encrypt(XmlDocument Doc, string ElementToEncrypt, string EncryptionElementID, RSA Alg, string KeyName)
+        private static string Encrypt(string ElementToEncrypt)
         {
-            // Check the arguments.
-            if (Doc == null)
-                throw new ArgumentNullException("Doc");
-            if (ElementToEncrypt == null)
+            if (ElementToEncrypt == null || ElementToEncrypt.Length <= 0)
                 throw new ArgumentNullException("ElementToEncrypt");
-            if (EncryptionElementID == null)
-                throw new ArgumentNullException("EncryptionElementID");
-            if (Alg == null)
-                throw new ArgumentNullException("Alg");
-            if (KeyName == null)
-                throw new ArgumentNullException("KeyName");
-
-            ////////////////////////////////////////////////
-            // Find the specified element in the XmlDocument
-            // object and create a new XmlElemnt object.
-            ////////////////////////////////////////////////
-            XmlElement elementToEncrypt = Doc.GetElementsByTagName(ElementToEncrypt)[0] as XmlElement;
-
-            // Throw an XmlException if the element was not found.
-            if (elementToEncrypt == null)
+            if (Key == null || Key.Length <= 0)
+                throw new ArgumentNullException("Key");
+            if (IV == null || IV.Length <= 0)
+                throw new ArgumentNullException("IV");
+            byte[] encrypted;
+            using (RijndaelManaged rijAlg = new RijndaelManaged())
             {
-                throw new XmlException("The specified element was not found");
-
-            }
-            RijndaelManaged sessionKey = null;
-
-            try
-            {
-                //////////////////////////////////////////////////
-                // Create a new instance of the EncryptedXml class
-                // and use it to encrypt the XmlElement with the
-                // a new random symmetric key.
-                //////////////////////////////////////////////////
-
-                // Create a 256 bit Rijndael key.
-                sessionKey = new RijndaelManaged();
-                sessionKey.KeySize = 256;
-
-                EncryptedXml eXml = new EncryptedXml();
-
-                byte[] encryptedElement = eXml.EncryptData(elementToEncrypt, sessionKey, false);
-                ////////////////////////////////////////////////
-                // Construct an EncryptedData object and populate
-                // it with the desired encryption information.
-                ////////////////////////////////////////////////
-
-                EncryptedData edElement = new EncryptedData();
-                edElement.Type = EncryptedXml.XmlEncElementUrl;
-                edElement.Id = EncryptionElementID;
-                // Create an EncryptionMethod element so that the
-                // receiver knows which algorithm to use for decryption.
-
-                edElement.EncryptionMethod = new EncryptionMethod(EncryptedXml.XmlEncAES256Url);
-                // Encrypt the session key and add it to an EncryptedKey element.
-                EncryptedKey ek = new EncryptedKey();
-
-                byte[] encryptedKey = EncryptedXml.EncryptKey(sessionKey.Key, Alg, false);
-
-                ek.CipherData = new CipherData(encryptedKey);
-
-                ek.EncryptionMethod = new EncryptionMethod(EncryptedXml.XmlEncRSA15Url);
-
-                // Create a new DataReference element
-                // for the KeyInfo element.  This optional
-                // element specifies which EncryptedData
-                // uses this key.  An XML document can have
-                // multiple EncryptedData elements that use
-                // different keys.
-                DataReference dRef = new DataReference();
-
-                // Specify the EncryptedData URI.
-                dRef.Uri = "#" + EncryptionElementID;
-
-                // Add the DataReference to the EncryptedKey.
-                ek.AddReference(dRef);
-                // Add the encrypted key to the
-                // EncryptedData object.
-
-                edElement.KeyInfo.AddClause(new KeyInfoEncryptedKey(ek));
-                // Set the KeyInfo element to specify the
-                // name of the RSA key.
-
-
-                // Create a new KeyInfoName element.
-                KeyInfoName kin = new KeyInfoName();
-
-                // Specify a name for the key.
-                kin.Value = KeyName;
-
-                // Add the KeyInfoName element to the
-                // EncryptedKey object.
-                ek.KeyInfo.AddClause(kin);
-                // Add the encrypted element data to the
-                // EncryptedData object.
-                edElement.CipherData.CipherValue = encryptedElement;
-                ////////////////////////////////////////////////////
-                // Replace the element from the original XmlDocument
-                // object with the EncryptedData element.
-                ////////////////////////////////////////////////////
-                EncryptedXml.ReplaceElement(elementToEncrypt, edElement, false);
-            }
-            catch (Exception ex)
-            {
-                // re-throw the exception.
-                throw ex;
-            }
-            finally
-            {
-                if (sessionKey != null)
+                rijAlg.Key = Key;
+                byte[] newIV = new byte[16];
+                for (int i = 0; i < 16; i++)
                 {
-                    sessionKey.Clear();
+                    newIV[i] = IV[i];
                 }
+                rijAlg.IV = newIV;
+                ICryptoTransform encryptor = rijAlg.CreateEncryptor(rijAlg.Key, rijAlg.IV);
 
+                using (MemoryStream msEncrypt = new MemoryStream())
+                {
+                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                    {
+                        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+                        {
+                            swEncrypt.Write(ElementToEncrypt);
+                        }
+                        encrypted = msEncrypt.ToArray();
+                    }
+                }
             }
-
+            StringBuilder tempStr = new StringBuilder();
+            for (int i = 0; i < encrypted.Length; i++)
+            {
+                tempStr.Append(encrypted[i].ToString()+" ");
+            }
+            return tempStr.ToString();
         }
-        private static void Decrypt(XmlDocument Doc, RSA Alg, string KeyName)
+        private static string Decrypt(string ElementToDecrypt)
         {
-            // Check the arguments.  
-            if (Doc == null)
-                throw new ArgumentNullException("Doc");
-            if (Alg == null)
-                throw new ArgumentNullException("Alg");
-            if (KeyName == null)
-                throw new ArgumentNullException("KeyName");
+            if (ElementToDecrypt == null || ElementToDecrypt.Length <= 0)
+                throw new ArgumentNullException("ElementToDecrypt");
+            if (Key == null || Key.Length <= 0)
+                throw new ArgumentNullException("Key");
+            if (IV == null || IV.Length <= 0)
+                throw new ArgumentNullException("IV");
 
-            // Create a new EncryptedXml object.
-            EncryptedXml exml = new EncryptedXml(Doc);
+            string decrypted = null;
+            string[] cipherTextStr = ElementToDecrypt.Split(new char[]{' '});
+            byte[] cipherText=new byte[cipherTextStr.Length];
+            int i = 0;
+            foreach(string tempStr in cipherTextStr)
+            {
+                cipherText [i]= byte.Parse(tempStr);
+                i++;
+            }
+            using (RijndaelManaged rijAlg = new RijndaelManaged())
+            {
+                rijAlg.Key = Key;
+                byte[] newIV = new byte[16];
+                for (i = 0; i < 16; i++)
+                {
+                    newIV[i] = IV[i];
+                }
+                rijAlg.IV = newIV;
+                ICryptoTransform decryptor = rijAlg.CreateDecryptor(rijAlg.Key, rijAlg.IV);
 
-            // Add a key-name mapping.
-            // This method can only decrypt documents
-            // that present the specified key name.
-            exml.AddKeyNameMapping(KeyName, Alg);
-
-            // Decrypt the element.
-            exml.DecryptDocument();
+                using (MemoryStream msDecrypt = new MemoryStream(cipherText))
+                {
+                    using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                    {
+                        using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                        {
+                            decrypted = srDecrypt.ReadToEnd();
+                        }
+                    }
+                }
+            }
+            return ElementToDecrypt;
+        }
+        public static byte[] GetKey()
+        {
+            StringBuilder tempStr = new StringBuilder();
+            for (int i = 0; i < 1; i++)
+            {
+                tempStr.Append("bneoqpnbv[p'm]w-ojq0438gmit[JG8--[0HN0[jtjz9jq0[jgg");
+            }
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT Product, SerialNumber FROM Win32_BaseBoard");
+            ManagementObjectCollection information = searcher.Get();
+            foreach (ManagementObject obj in information)
+            {
+                foreach (PropertyData data in obj.Properties)
+                    tempStr.Append((string)data.Value);
+            }
+            ManagementClass mc = new ManagementClass("Win32_Processor");
+            information = mc.GetInstances();
+            foreach (ManagementObject mo in information)
+            {
+                tempStr.Append(mo.Properties["ProcessorId"].Value.ToString());
+            }
+            //MessageBox.Show(tempStr.ToString());
+            SHA256Managed sha256m = new SHA256Managed();
+            byte[] hashData = sha256m.ComputeHash(Encoding.Default.GetBytes(tempStr.ToString()));
+            //MessageBox.Show(hashData.Length.ToString());
+            //tempStr = new StringBuilder();
+            //for (int i = 0; i < hashData.Length; i++)
+            //{
+            //    tempStr.Append(hashData[i].ToString("x2"));
+            //}
+            //MessageBox.Show(tempStr.ToString());
+            return hashData;
         }
         #endregion
     }

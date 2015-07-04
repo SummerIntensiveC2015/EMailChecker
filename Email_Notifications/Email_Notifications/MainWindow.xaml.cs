@@ -23,20 +23,26 @@ namespace Email_Notifications
     public partial class FirstLogin : Window
     {
         private static bool firstLogin = true;
-        Settings settin;
         Imap myCon;
         
         public FirstLogin()
         {
-            InitializeComponent();
-            this.Hide();
-            setLoginPosition();
-            Auth();
-            if (!firstLogin)
+            try
             {
-                textBoxLogin.Text = Settings.GetInstance().Adress;
-                textBoxPassword.Password = Settings.GetInstance().Password;
-            }            
+                InitializeComponent();
+                this.Hide();
+                setLoginPosition();
+                Auth();
+                if (!firstLogin)
+                {
+                    textBoxLogin.Text = Settings._Adress;
+                    textBoxPassword.Password = Settings._Password;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
         private void Auth()
         {
@@ -48,7 +54,7 @@ namespace Email_Notifications
             {
             }
             int tmpcount = -1;
-            if (Settings.GetInstance().Adress != null)
+            if (Settings._Adress != null)
             {
                 myCon = new Imap();
                 try
@@ -101,8 +107,14 @@ namespace Email_Notifications
             int count = -1;
             if (CorrectLogin && CorrectPassword)
             {
-                settin = Settings.GetInstance();
-                settin.setSettings(textBoxLogin.Text, textBoxPassword.Password);
+                try
+                {
+                    Settings.setSettings(textBoxLogin.Text, textBoxPassword.Password);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
                 myCon = new Imap();
                 try
                 {
@@ -111,6 +123,7 @@ namespace Email_Notifications
 
                     try
                     {
+                        Settings settin = Settings.GetInstance();
                         Settings.SaveSettings(settin);
                     }
                     catch
@@ -119,9 +132,10 @@ namespace Email_Notifications
                     }
 
                 }
-                catch
+                catch(Exception ex)
                 {
-                    MessageBox.Show("Подключение не удалось. Проверьте правильность данных и наличие интернет соединения.");
+                    //MessageBox.Show("Подключение не удалось. Проверьте правильность данных и наличие интернет соединения.");
+                    MessageBox.Show(ex.ToString());
                 }
             }
             else
@@ -137,8 +151,6 @@ namespace Email_Notifications
                     firstLogin = false;
                 }
             }
-            
         }
-
     }
 }
