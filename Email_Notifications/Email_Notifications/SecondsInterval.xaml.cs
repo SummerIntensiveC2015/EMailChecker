@@ -38,6 +38,11 @@ namespace Email_Notifications
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            this.Close();
+        }
+
+        private void buttonOK_Click(object sender, RoutedEventArgs e)
+        {
             try
             {
                 int interval = int.Parse(texBotInterval.Text),
@@ -45,11 +50,11 @@ namespace Email_Notifications
                 if (interval > 0 && interval < maxinterval)
                 {
                     Settings.GetInstance().NotificationLiveTimeInSeconds = interval;
-                    this.Hide();
+                    this.Close();
                 }
                 else
                 {
-                    MessageBox.Show("Введите целое число > 0 и < "+maxinterval);
+                    MessageBox.Show("Введите целое число > 0 и < " + maxinterval);
                 }
 
             }

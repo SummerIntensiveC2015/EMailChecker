@@ -17,8 +17,6 @@ namespace Email_Notifications
         Imap myCurrentImap;
         TaskbarIcon tbiField = new TaskbarIcon();
         String[] stringsContextMenuField = { "Ваша почта", "Смена почты", "Время показа уведомлений", "Частота запросов", "Не беспокоить", "Выход" };
-        Interval myInterval = new Interval();
-        SecondsInterval mysInterval = new SecondsInterval();
         List<String> address = new List<string>(),
                 name = new List<string>(),
                 theme = new List<string>();
@@ -182,13 +180,14 @@ namespace Email_Notifications
 
         private void ShowISecondnterval(object sender, RoutedEventArgs e)
         {
-            
+            SecondsInterval mysInterval = new SecondsInterval();
             mysInterval.Show();
         }
 
         private void ShowInterval(object sender, RoutedEventArgs e)
         {
-             myInterval.Show();
+            Interval myInterval = new Interval();
+            myInterval.Show();
         }
 
         private void Exit(object sender, RoutedEventArgs e)

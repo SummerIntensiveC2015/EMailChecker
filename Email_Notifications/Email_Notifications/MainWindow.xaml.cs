@@ -134,8 +134,8 @@ namespace Email_Notifications
                 }
                 catch(Exception ex)
                 {
-                    //MessageBox.Show("Подключение не удалось. Проверьте правильность данных и наличие интернет соединения.");
-                    MessageBox.Show(ex.ToString());
+                    MessageBox.Show("Подключение не удалось. Проверьте правильность данных и наличие интернет соединения.");
+                    //MessageBox.Show(ex.ToString());
                 }
             }
             else

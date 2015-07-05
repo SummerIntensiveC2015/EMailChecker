@@ -42,7 +42,7 @@ namespace Email_Notifications
                     con.Close();
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 n = 0;
 
@@ -76,7 +76,7 @@ namespace Email_Notifications
                     con.Close();
                 }
             }
-            catch (Exception ex)
+            catch
             {
 
                 datarows = null;
