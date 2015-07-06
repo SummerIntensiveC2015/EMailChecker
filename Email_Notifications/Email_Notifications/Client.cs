@@ -28,12 +28,13 @@ namespace Email_Notifications
         {
             if (File.Exists(sPath))
                 return;
-            File.Create(sPath);
+            using (File.Create(sPath)) { }
             mydb = new sqlClass();
             sSql = @"CREATE TABLE [User] (
                 [Email] TEXT(50) NOT NULL ON CONFLICT ROLLBACK, 
                 [Password] TEXT(50) NOT NULL ON CONFLICT ROLLBACK, 
                 [Active] BOOL, 
+                [LastCountMessage] INTEGER, 
                 CONSTRAINT [sqlite_autoindex_User_1] PRIMARY KEY ([Email]));
             CREATE TABLE [Story] (
                 [EmailUser] TEXT(50) NOT NULL ON CONFLICT ROLLBACK CONSTRAINT [UserStory] REFERENCES [User]([Email]), 

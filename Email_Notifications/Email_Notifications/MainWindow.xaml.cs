@@ -30,8 +30,8 @@ namespace Email_Notifications
 
         public Login()
         {
+            clientDB.CreateDB();
             //clientDB.DeleteAllEmail();
-            //clientDB.CreateDB();
             try
             {
                 InitializeComponent();
