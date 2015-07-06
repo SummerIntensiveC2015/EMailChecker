@@ -48,7 +48,26 @@ namespace Email_Notifications
             timer = new System.Windows.Threading.DispatcherTimer();
             timer.Tick += new EventHandler(timerTick);
             timer.Interval = new TimeSpan(0, GlobalSettings.ServerCheckTimeInMinutes, 0);
-            
+
+            var actAcc = clientDB.ActiveAccount();
+            myCurrentImap = new List<Imap>();
+            foreach (string s in actAcc.Keys)
+            {
+                myCurrentImap.Add(new Imap(Cryptography.Decrypt(s), Cryptography.Decrypt(actAcc[s])));
+            }
+            try
+            {
+                foreach (Imap im in myCurrentImap)
+                {
+                    im.Connection();
+                    clientDB.UpdateAccountMessages(Cryptography.Encrypt(im.currentEmail), im.Connections.Inbox.Count);
+                }
+            }
+            catch
+            {
+                timer.Stop();
+            }
+
             timer.Start();
         }
 
@@ -64,18 +83,6 @@ namespace Email_Notifications
                 foreach (string s in actAcc.Keys)
                 {
                     myCurrentImap.Add(new Imap(Cryptography.Decrypt(s), Cryptography.Decrypt(actAcc[s])));
-                }
-                try
-                {
-                    foreach (Imap im in myCurrentImap)
-                    {
-                        im.Connection();
-                        clientDB.UpdateAccountMessages(Cryptography.Encrypt(im.currentEmail), im.Connections.Inbox.Count);
-                    }
-                }
-                catch
-                {
-                    timer.Stop();
                 }
                 foreach (Imap im in myCurrentImap)
                 {
