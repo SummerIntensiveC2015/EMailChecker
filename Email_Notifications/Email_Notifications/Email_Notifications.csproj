@@ -37,7 +37,8 @@
     <Reference Include="BouncyCastle">
       <HintPath>..\packages\MimeKit.1.2.6.0\lib\net45\BouncyCastle.dll</HintPath>
     </Reference>
-    <Reference Include="ExceptionHandler">
+    <Reference Include="ExceptionHandler, Version=1.1.2916.28489, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\dll\ExceptionHandler.dll</HintPath>
     </Reference>
     <Reference Include="Hardcodet.Wpf.TaskbarNotification">
@@ -50,7 +51,8 @@
     <Reference Include="MimeKit">
       <HintPath>..\packages\MimeKit.1.2.6.0\lib\net45\MimeKit.dll</HintPath>
     </Reference>
-    <Reference Include="SQLite.NET">
+    <Reference Include="SQLite.NET, Version=0.21.1869.3794, Culture=neutral, PublicKeyToken=c273bd375e695f9c">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\dll\SQLite.NET.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -75,10 +77,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Client.cs" />
+    <Compile Include="Cryptography.cs" />
+    <Compile Include="GlobalSettings.cs" />
     <Compile Include="Imap.cs" />
-    <Compile Include="Pop.cs" />
     <Compile Include="Interval.xaml.cs">
       <DependentUpon>Interval.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MailAddressSelection.xaml.cs">
+      <DependentUpon>MailAddressSelection.xaml</DependentUpon>
     </Compile>
     <Compile Include="SecondsInterval.xaml.cs">
       <DependentUpon>SecondsInterval.xaml</DependentUpon>
@@ -87,6 +94,10 @@
     <Compile Include="sqlClass.cs" />
     <Compile Include="Tray.cs" />
     <Page Include="Interval.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MailAddressSelection.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

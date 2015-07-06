@@ -22,7 +22,7 @@ namespace Email_Notifications
         public Interval()
         {
             InitializeComponent();
-            texBotInterval.Text = Settings.GetInstance().ServerCheckTimeInMinutes.ToString();
+            texBotInterval.Text = GlobalSettings.ServerCheckTimeInMinutes.ToString();
             this.ShowInTaskbar = false;
             this.WindowStyle = System.Windows.WindowStyle.None;
             setPosition();
@@ -48,7 +48,7 @@ namespace Email_Notifications
                 int interval = int.Parse(texBotInterval.Text);
                 if (interval > 0)
                 {
-                    Settings.GetInstance().ServerCheckTimeInMinutes = interval;
+                    GlobalSettings.ServerCheckTimeInMinutes = interval;
                     this.Close();
                 }
                 else

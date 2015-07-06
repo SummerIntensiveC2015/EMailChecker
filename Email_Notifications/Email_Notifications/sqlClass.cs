@@ -18,35 +18,31 @@ namespace Email_Notifications
         public int iExecuteNonQuery(string FileData, string sSql, int where)
         {
             int n = 0;
-            try
-            {
+            //try
+            //{
                 using (SQLiteConnection con = new SQLiteConnection())
                 {
                     if (where == 0)
                     {
-                        con.ConnectionString = @"Data Source=" + FileData + ";New=True;Version=3";
+                        con.ConnectionString = @"Data Source=" + FileData + "; Version=3; New=True;";
                     }
                     else
                     {
-                        con.ConnectionString = @"Data Source=" + FileData + ";New=False;Version=3";
+                        con.ConnectionString = @"Data Source=" + FileData + "; Version=3; New=False;";
                     }
                     con.Open();
                     using (SQLiteCommand sqlCommand = con.CreateCommand())
                     {
-
-
-
                         sqlCommand.CommandText = sSql;
                         n = sqlCommand.ExecuteNonQuery();
                     }
                     con.Close();
                 }
-            }
-            catch
-            {
-                n = 0;
-
-            }
+            //}
+            //catch
+            //{
+            //    n = 0;
+            //}
             return n;
 
         }
@@ -62,7 +58,7 @@ namespace Email_Notifications
             {
                 using (SQLiteConnection con = new SQLiteConnection())
                 {
-                    con.ConnectionString = @"Data Source=" + FileData + ";New=False;Version=3";
+                    con.ConnectionString = @"Data Source=" + FileData + "; Version=3; New=False;";
                     con.Open();
                     using (SQLiteCommand sqlCommand = con.CreateCommand())
                     {
@@ -76,9 +72,9 @@ namespace Email_Notifications
                     con.Close();
                 }
             }
-            catch
+            catch(Exception ex)
             {
-
+            //    throw ex;
                 datarows = null;
             }
             return datarows;
