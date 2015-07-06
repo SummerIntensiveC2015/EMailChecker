@@ -16,7 +16,7 @@ namespace Email_Notifications
         System.Windows.Threading.DispatcherTimer timer;
         List<Imap> myCurrentImap = new List<Imap>();
         TaskbarIcon tbiField = new TaskbarIcon();
-        String[] stringsContextMenuField = { "Ваша почта", "Смена почты", "Время показа уведомлений", "Частота запросов", "Не беспокоить", "Выход" };
+        String[] stringsContextMenuField = { "Смена почты", "Время показа уведомлений", "Частота запросов", "Не беспокоить", "Выход" };
         List<String> address = new List<string>(),
                 name = new List<string>(),
                 theme = new List<string>();
@@ -31,12 +31,11 @@ namespace Email_Notifications
             {
                 System.Windows.Controls.MenuItem item = new System.Windows.Controls.MenuItem();
                 item.Header = stringsContextMenuField[i];
-                if (i == 0) item.Click += OpenBrowser;
-                if (i == 1) item.Click += PostChange;
-                if (i == 2) item.Click += ShowISecondnterval;
-                if (i == 3) item.Click += ShowInterval;
-                if (i == 4) item.Click += stopTimer;
-                if (i == 5) item.Click += Exit;
+                if (i == 0) item.Click += PostChange;
+                if (i == 1) item.Click += ShowISecondnterval;
+                if (i == 2) item.Click += ShowInterval;
+                if (i == 3) item.Click += stopTimer;
+                if (i == 4) item.Click += Exit;
                 tbiField.ContextMenu.Items.Add(item);
             }
             timerRun();
@@ -112,6 +111,7 @@ namespace Email_Notifications
                         {
                             MimeMessage m = tempImap.DownloadMessage(tempCount[str]);
                             tempCount[str]++;
+                            clientDB.UpdateAccountMessages(str, tempCount[str]);
 
                             string from = m.From[0].ToString(),
                             addresFrom = from.Split(' ').Last();
@@ -191,13 +191,13 @@ namespace Email_Notifications
                 GlobalSettings.NotificationsEnabled = false;
                 timer.Stop();
                 tbiField.ToolTipText = "Программа остановлена";
-                (tbiField.ContextMenu.Items[4] as System.Windows.Controls.MenuItem).Header = "Включить оповещения";
+                (sender as System.Windows.Controls.MenuItem).Header = "Включить оповещения";
             }
             else
             {
                 GlobalSettings.NotificationsEnabled = true;
                 tbiField.ToolTipText = "Программа работает";
-                (tbiField.ContextMenu.Items[4] as System.Windows.Controls.MenuItem).Header = "Не беспокоить";
+                (sender as System.Windows.Controls.MenuItem).Header = "Не беспокоить";
                 timer.Interval = new TimeSpan(0, GlobalSettings.ServerCheckTimeInMinutes, 0);
                 timer.Start();
             }

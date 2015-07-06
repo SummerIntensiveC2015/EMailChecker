@@ -42,29 +42,9 @@ namespace Email_Notifications
             try
             {
                 Login log = new Login();
+                log.Hide();
                 log.ShowDialog();
-                List<string> All = ClientBD.DisplayAllUsers();
-                List<string> Active = ClientBD.DisplayActiveUsers();
-                ListViewClear();
-                foreach (string str in All)
-                {
-                    CheckBox cb = new CheckBox();
-                    StackPanel sp = new StackPanel();
-                    sp.Orientation = Orientation.Horizontal;
-                    TextBlock tb = new TextBlock();
-                    tb.Text = Cryptography.Decrypt(str);
-                    sp.Children.Add(tb);
-                    cb.Content = sp;
-                    if (Active.Contains(str))
-                        cb.IsChecked = true;
-                    else
-                        cb.IsChecked = false;
-
-                    cb.Checked += CheckBox_Checked;
-                    cb.Unchecked += CheckBox_Unchecked;
-
-                    ListVeiwEmailAddress.Items.Add(cb);
-                }
+                ListViewClearAndFill();
             }
             catch (Exception ex)
             {
@@ -80,32 +60,12 @@ namespace Email_Notifications
                 string tempStr = Cryptography.Encrypt((((ListVeiwEmailAddress.SelectedItem as CheckBox).Content as StackPanel).Children[0] as TextBlock).Text);
                 Login log = new Login(Cryptography.Decrypt(tempStr), Cryptography.Decrypt(users[tempStr]));
                 log.ShowDialog();
-                List<string> All = ClientBD.DisplayAllUsers();
-                List<string> Active = ClientBD.DisplayActiveUsers();
-                ListViewClear();
-                foreach (string str in All)
-                {
-                    CheckBox cb = new CheckBox();
-                    StackPanel sp = new StackPanel();
-                    sp.Orientation = Orientation.Horizontal;
-                    TextBlock tb = new TextBlock();
-                    tb.Text = Cryptography.Decrypt(str);
-                    sp.Children.Add(tb);
-                    cb.Content = sp;
-                    if (Active.Contains(str))
-                        cb.IsChecked = true;
-                    else
-                        cb.IsChecked = false;
-
-                    cb.Checked += CheckBox_Checked;
-                    cb.Unchecked += CheckBox_Unchecked;
-
-                    ListVeiwEmailAddress.Items.Add(cb);
-                }
+                ListViewClearAndFill();
             }
-            catch (Exception ex)
+            catch //(Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                //MessageBox.Show(ex.ToString());
+                MessageBox.Show("Выберите адрес для редактирования");
             }
         }
 
@@ -115,9 +75,22 @@ namespace Email_Notifications
             {
                 string tempStr = Cryptography.Encrypt((((ListVeiwEmailAddress.SelectedItem as CheckBox).Content as StackPanel).Children[0] as TextBlock).Text);
                 ClientBD.DeleteEmail(tempStr);
+                ListViewClearAndFill();
+            }
+            catch //(Exception ex)
+            {
+                //MessageBox.Show(ex.ToString());
+                MessageBox.Show("Выберите адрес для удаления");
+            }
+        }
+
+        public void ListViewClearAndFill()
+        {
+            try
+            {
+                ListVeiwEmailAddress.Items.Clear();
                 List<string> All = ClientBD.DisplayAllUsers();
                 List<string> Active = ClientBD.DisplayActiveUsers();
-                ListViewClear();
                 foreach (string str in All)
                 {
                     CheckBox cb = new CheckBox();
@@ -144,38 +117,13 @@ namespace Email_Notifications
             }
         }
 
-        public void ListViewClear()
-        {
-            ListVeiwEmailAddress.Items.Clear();
-        }
-
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             try
             {
                 setMailAddressSelectionPosition();
-                List<string> All = ClientBD.DisplayAllUsers();
-                List<string> Active = ClientBD.DisplayActiveUsers();
-                foreach (string str in All)
-                {
-                    CheckBox cb = new CheckBox();
-                    StackPanel sp = new StackPanel();
-                    sp.Orientation = Orientation.Horizontal;
-                    TextBlock tb = new TextBlock();
-                    tb.Text = Cryptography.Decrypt(str);
-                    sp.Children.Add(tb);
-                    cb.Content = sp;
-                    if (Active.Contains(str))
-                        cb.IsChecked = true;
-                    else
-                        cb.IsChecked = false;
-
-                    cb.Checked += CheckBox_Checked;
-                    cb.Unchecked += CheckBox_Unchecked;
-
-                    ListVeiwEmailAddress.Items.Add(cb);
-                }
+                ListViewClearAndFill();
             }
             catch (Exception ex)
             {

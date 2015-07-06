@@ -158,13 +158,14 @@ namespace Email_Notifications
                 if (Edit)
                 {
                     clientDB.UpdateEmail(Cryptography.Encrypt(OldEmail), Cryptography.Encrypt(textBoxLogin.Text), Cryptography.Encrypt(textBoxPassword.Password));
+                    this.Hide();
                 }
                 else
                 {
                     bool NeedIt = true;
                     if (count != -1)
                     {
-                        if (clientDB.DisplayAllUsers() != null)
+                        if (clientDB.DisplayAllUsers().Count != 0)
                         {
                             if (clientDB.DisplayAllUsers().Contains(Cryptography.Encrypt(textBoxLogin.Text)))
                                 NeedIt = false;

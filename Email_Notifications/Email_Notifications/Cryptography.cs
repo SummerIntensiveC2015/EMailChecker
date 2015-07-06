@@ -12,8 +12,9 @@ namespace Email_Notifications
 {
     public static class Cryptography
     {
-        public static byte[] Key = GetKey();
-        public static byte[] IV = GetKey();
+        private static byte[] Key = GetKey();
+        private static byte[] IV = GetKey();
+        private static string salt = "bneoqpnbv[p'm]w-ojq0438gmit[JG8--[0HN0[jtjz9jq0[jgg";
 
 
         public static string Encrypt(string ElementToEncrypt)
@@ -108,7 +109,7 @@ namespace Email_Notifications
             StringBuilder tempStr = new StringBuilder();
             for (int i = 0; i < 1; i++)
             {
-                tempStr.Append("bneoqpnbv[p'm]w-ojq0438gmit[JG8--[0HN0[jtjz9jq0[jgg");
+                tempStr.Append(salt);
             }
             ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT Product, SerialNumber FROM Win32_BaseBoard");
             ManagementObjectCollection information = searcher.Get();
