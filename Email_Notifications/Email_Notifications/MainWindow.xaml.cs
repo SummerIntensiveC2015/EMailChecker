@@ -20,41 +20,68 @@ namespace Email_Notifications
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class FirstLogin : Window
+    public partial class Login : Window
     {
         private static bool firstLogin = true;
-        Settings settin;
         Imap myCon;
-        
-        public FirstLogin()
+        Client clientDB = new Client();
+        bool Edit = false;
+        string OldEmail;
+
+        public Login()
         {
-            InitializeComponent();
-            this.Hide();
-            setLoginPosition();
-            Auth();
-            if (!firstLogin)
+            try
             {
-                textBoxLogin.Text = Settings.GetInstance().Adress;
-                textBoxPassword.Password = Settings.GetInstance().Password;
-            }            
+                clientDB.CreateDB();
+                //clientDB.DeleteAllEmail();
+                InitializeComponent();
+                this.Hide();
+                setLoginPosition();
+                Auth();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+        public Login(string email, string password)
+        {
+            try
+            {
+                OldEmail = email;
+                Edit = true;
+                InitializeComponent();
+                this.Hide();
+                setLoginPosition();
+                if (!firstLogin)
+                {
+                    textBoxLogin.Text = email;
+                    textBoxPassword.Password = password;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
         private void Auth()
         {
             try
             {
-                Settings.LoadSettings();
+                GlobalSettings.LoadSettings();
             }
-            catch
+            catch //(Exception ex)
             {
+                //MessageBox.Show(ex.ToString());
             }
-            int tmpcount = -1;
-            if (Settings.GetInstance().Adress != null)
+            var allUsers = clientDB.DisplayAllUsers();
+            if (allUsers.Count != 0)
             {
-                myCon = new Imap();
+                var clAllAcs = clientDB.AllAccount();
+                myCon = new Imap(Cryptography.Decrypt(allUsers[0]), Cryptography.Decrypt(clAllAcs[allUsers[0]]));
                 try
                 {
                     myCon.Connection();
-                    tmpcount = myCon.Connections.Inbox.Count;
                     if (firstLogin)
                     {
                         Tray myTray = new Tray();
@@ -66,7 +93,6 @@ namespace Email_Notifications
                     MessageBox.Show(ex.ToString());
                     this.Show();
                 }
-
             }
             else
             {
@@ -95,49 +121,77 @@ namespace Email_Notifications
 
         private void buttonLogin_Click(object sender, RoutedEventArgs e)
         {
-            
-            bool CorrectLogin = (textBoxLogin.Text.Length>5 && textBoxLogin.Text.Length<50 && textBoxLogin.Text.Contains('@')),
-                CorrectPassword = (textBoxPassword.Password.Length > 3 && textBoxPassword.Password.Length < 50);
-            int count = -1;
-            if (CorrectLogin && CorrectPassword)
+            try
             {
-                settin = Settings.GetInstance();
-                settin.setSettings(textBoxLogin.Text, textBoxPassword.Password);
-                myCon = new Imap();
-                try
+                bool CorrectLogin = (textBoxLogin.Text.Length > 5 && textBoxLogin.Text.Length < 50 && textBoxLogin.Text.Contains('@')),
+                    CorrectPassword = (textBoxPassword.Password.Length > 3 && textBoxPassword.Password.Length < 50);
+                int count = -1;
+                if (CorrectLogin && CorrectPassword)
                 {
-                    myCon.Connection();
-                    count = myCon.Connections.Inbox.Count;
-
                     try
                     {
-                        Settings.SaveSettings(settin);
-                    }
-                    catch
-                    {
-                        MessageBox.Show("Не удалось сохранить настройки. Проверьте доступность диска и запустите программу от имени администратора.");
-                    }
+                        myCon = new Imap(textBoxLogin.Text, textBoxPassword.Password);
+                        myCon.Connection();
+                        count = myCon.Connections.Inbox.Count;
 
+                        try
+                        {
+                            GlobalSettings settin = GlobalSettings.GetInstance();
+                            GlobalSettings.SaveSettings(settin);
+                        }
+                        catch
+                        {
+                            MessageBox.Show("Не удалось сохранить настройки. Проверьте доступность диска и запустите программу от имени администратора.");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.ToString());
+                        MessageBox.Show("Подключение не удалось. Проверьте правильность данных и наличие интернет соединения.");
+                    }
                 }
-                catch
+                else
                 {
-                    MessageBox.Show("Подключение не удалось. Проверьте правильность данных и наличие интернет соединения.");
+                    MessageBox.Show("Ваши данные некорректны");
                 }
-            }
-            else
-            {
-                MessageBox.Show("Ваши данные некорректны");
-            }
-            if (count != -1)
-            {
-                Hide();
-                if (firstLogin)
+                if (Edit)
                 {
-                    Tray myTray = new Tray();
-                    firstLogin = false;
+                    clientDB.UpdateEmail(Cryptography.Encrypt(OldEmail), Cryptography.Encrypt(textBoxLogin.Text), Cryptography.Encrypt(textBoxPassword.Password));
+                    this.Close();
+                }
+                else
+                {
+                    bool NeedIt = true;
+                    if (count != -1)
+                    {
+                        if (clientDB.DisplayAllUsers().Count != 0)
+                        {
+                            if (clientDB.DisplayAllUsers().Contains(Cryptography.Encrypt(textBoxLogin.Text)))
+                                NeedIt = false;
+                        }
+                        if (NeedIt)
+                        {
+                            clientDB.InsertUser(Cryptography.Encrypt(textBoxLogin.Text), Cryptography.Encrypt(textBoxPassword.Password), true);
+                            if (firstLogin)
+                            {
+                                this.Hide();
+                                Tray myTray = new Tray();
+                                firstLogin = false;
+                            }
+                            else
+                                this.Close();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Такой адрес уже есть");
+                        }
+                    }
                 }
             }
-            
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
 
     }

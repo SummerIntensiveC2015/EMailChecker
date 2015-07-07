@@ -22,7 +22,7 @@ namespace Email_Notifications
         public Interval()
         {
             InitializeComponent();
-            texBotInterval.Text = Settings.GetInstance().ServerCheckTimeInMinutes.ToString();
+            texBotInterval.Text = GlobalSettings.ServerCheckTimeInMinutes.ToString();
             this.ShowInTaskbar = false;
             this.WindowStyle = System.Windows.WindowStyle.None;
             setPosition();
@@ -38,29 +38,29 @@ namespace Email_Notifications
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            this.Close();
+        }
+
+        private void buttonOK_Click(object sender, RoutedEventArgs e)
+        {
             try
             {
                 int interval = int.Parse(texBotInterval.Text);
                 if (interval > 0)
                 {
-                    Settings.GetInstance().ServerCheckTimeInMinutes = interval;
+                    GlobalSettings.ServerCheckTimeInMinutes = interval;
                     this.Close();
                 }
                 else
                 {
                     MessageBox.Show("Введите целое число > 0");
                 }
-                
+
             }
             catch
             {
                 MessageBox.Show("Введите целое число > 0");
             }
-        }
-
-        private void Grid_LostFocus(object sender, RoutedEventArgs e)
-        {
-            this.Hide();
         }
     }
 }
