@@ -30,10 +30,10 @@ namespace Email_Notifications
 
         public Login()
         {
-            clientDB.CreateDB();
-            //clientDB.DeleteAllEmail();
             try
             {
+                clientDB.CreateDB();
+                //clientDB.DeleteAllEmail();
                 InitializeComponent();
                 this.Hide();
                 setLoginPosition();
@@ -143,11 +143,10 @@ namespace Email_Notifications
                         {
                             MessageBox.Show("Не удалось сохранить настройки. Проверьте доступность диска и запустите программу от имени администратора.");
                         }
-
                     }
-                    catch //(Exception ex)
+                    catch (Exception ex)
                     {
-                        //MessageBox.Show(ex.ToString());
+                        MessageBox.Show(ex.ToString());
                         MessageBox.Show("Подключение не удалось. Проверьте правильность данных и наличие интернет соединения.");
                     }
                 }
@@ -158,7 +157,7 @@ namespace Email_Notifications
                 if (Edit)
                 {
                     clientDB.UpdateEmail(Cryptography.Encrypt(OldEmail), Cryptography.Encrypt(textBoxLogin.Text), Cryptography.Encrypt(textBoxPassword.Password));
-                    this.Hide();
+                    this.Close();
                 }
                 else
                 {
@@ -173,12 +172,18 @@ namespace Email_Notifications
                         if (NeedIt)
                         {
                             clientDB.InsertUser(Cryptography.Encrypt(textBoxLogin.Text), Cryptography.Encrypt(textBoxPassword.Password), true);
+                            if (firstLogin)
+                            {
+                                this.Hide();
+                                Tray myTray = new Tray();
+                                firstLogin = false;
+                            }
+                            else
+                                this.Close();
                         }
-                        this.Hide();
-                        if (firstLogin)
+                        else
                         {
-                            Tray myTray = new Tray();
-                            firstLogin = false;
+                            MessageBox.Show("Такой адрес уже есть");
                         }
                     }
                 }

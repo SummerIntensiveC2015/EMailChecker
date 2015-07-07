@@ -131,8 +131,8 @@ namespace Email_Notifications
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
-                //MessageBox.Show("Не удалось загрузить письмо. Уведомления остановлены");
+                //MessageBox.Show(ex.ToString());
+                MessageBox.Show("Не удалось загрузить письмо. Уведомления остановлены");
                 timer.Stop();
             }
         }
