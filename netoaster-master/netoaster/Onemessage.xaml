@@ -2,7 +2,7 @@
     x:Class="SuccessToaster"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  Title="SuccessToast" Width="404" Height="97" SizeToContent="Height"
+  Title="SuccessToast" Width="404" Height="151" SizeToContent="Height"
   WindowStyle="None" AllowsTransparency="True" Background="Transparent"  BorderBrush="#FF59A1EA" Topmost="True" ShowInTaskbar="False">
 
     <Grid Name="SuccessToasterInstance" MouseUp="Border_MouseUp">
@@ -23,6 +23,7 @@
         <TextBlock HorizontalAlignment="Left" Margin="150,66,0,0"  VerticalAlignment="Top" Width="209" Height="21"><Run x:Name="themetext" Text=""/></TextBlock>
         <TextBlock HorizontalAlignment="Left" Margin="115,37,0,0"  VerticalAlignment="Top" Width="230" Height="22" FontSize="11" Foreground="#FF665E5E"><Run x:Name="emailtext"/></TextBlock>
         <Button x:Name="close" Content="X" HorizontalAlignment="Left" Margin="382,3,0,0" VerticalAlignment="Top" Width="17" Height="21" FontFamily="SketchFlow Print" Background="{x:Null}" BorderBrush="{x:Null}" RenderTransformOrigin="0.451,0.032" Click="close_Click" FontSize="14" FontWeight="Bold"/>
+        <TextBlock x:Name="EmailTo" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="384" Height="24" Margin="10,97,0,0"><Run x:Name="autorname1"/></TextBlock>
 
 
         <Grid.RenderTransform>

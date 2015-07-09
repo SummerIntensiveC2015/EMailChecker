@@ -12,16 +12,7 @@ using MimeKit;
 namespace Email_Notifications
 {
     /*
-     * Settings settin = Settings.GetInstance();
-            settin.Adress = "почта";
-            settin.Password = "пароль";
-            settin.PopServer = "pop." + settin.Adress.Split('@')[1];
-            settin.ImapServer = settin.PopServer.Replace("pop", "imap");
-            settin.PopPort = 995;
-            settin.ImapPort = 993;
-            settin.SSL = true;
-            Settings.SaveSettings(settin);
-            Imap myCon = new Imap();
+            Imap myCon = new Imap("почта", "пароль");
             myCon.Connection();
             int count = myCon.Connections.Inbox.Count;
             MimeMessage  m = myCon.DownloadMessage(count-1);
@@ -32,11 +23,20 @@ namespace Email_Notifications
      */
     class Imap
     {
-        private Settings _CurrentSettings;
+        public Settings currentSettings;
+        public string currentEmail;
+        private string currentPassword;
+
+        public Imap(string email, string password)
+        {
+            currentSettings = new Settings(email);
+            currentEmail = email;
+            currentPassword = password;
+        }
 
         public Imap()
         {
-            _CurrentSettings = Settings.GetInstance();
+            // TODO: Complete member initialization
         }
 
         private ImapClient _Connection = new ImapClient();
@@ -48,10 +48,9 @@ namespace Email_Notifications
         public void Connection()
         {
             if (!_Connection.IsConnected)
-                _Connection.Connect(_CurrentSettings.ImapServer, _CurrentSettings.ImapPort, _CurrentSettings.SSL ? SecureSocketOptions.SslOnConnect : SecureSocketOptions.None);
-
+                _Connection.Connect(currentSettings.ImapServer, currentSettings.ImapPort, currentSettings.SSL ? SecureSocketOptions.SslOnConnect : SecureSocketOptions.None);
             if (!_Connection.IsAuthenticated)
-                _Connection.Authenticate(Settings._Adress, Settings._Password);
+                _Connection.Authenticate(currentEmail, currentPassword);
             if (!_Connection.Inbox.IsOpen)
                 _Connection.Inbox.Open(FolderAccess.ReadOnly);
         }
@@ -73,8 +72,6 @@ namespace Email_Notifications
             MimeMessage Result = _Connection.Inbox.GetMessage(index);
             return (Result);
         }
-
-
 
         private bool isActivity()
         {

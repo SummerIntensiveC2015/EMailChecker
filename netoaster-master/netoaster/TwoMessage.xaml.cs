@@ -8,8 +8,8 @@ using System.Diagnostics;
 
 public partial class WarningToaster
 {
-    public static string email;
-    private WarningToaster(string messageEmail1, string messageAutor1, string messageTheme1, string messageEmail2, string messageAutor2, string messageTheme2, int timeActive , ToasterPosition position, ToasterAnimation animation, double margin)
+    public string email;
+    private WarningToaster(netoaster.Message myMessage1, netoaster.Message myMessage2, string messageEmail1, string messageAutor1, string messageTheme1, string messageEmail2, string messageAutor2, string messageTheme2, int timeActive, ToasterPosition position, ToasterAnimation animation, double margin)
   {
     InitializeComponent();
 
@@ -21,6 +21,16 @@ public partial class WarningToaster
     Random rnd = new Random();
     avatar1.Fill = brushes[rnd.Next(brushes.Length)];
     avatar2.Fill = brushes[rnd.Next(brushes.Length)];
+
+    email = myMessage1.emailUser;
+    if (!(myMessage1.emailUser.Length > "summerintensiveemailcheckertest".Length))
+    {
+        EmailTo.Text = "Пришло на адрес: " + myMessage1.emailUser;
+    }
+    else
+    {
+        EmailTo.Text = "Пришло на адрес: " + myMessage1.emailUser.Remove("summerintensiveemailcheckertest".Length-3) + "...";
+    }
 
     var msgAutor1 = (System.Windows.Documents.Run)WarningToasterInstance.FindName("autorname1");
     if (msgAutor1 != null) msgAutor1.Text = messageAutor1 ?? string.Empty;
@@ -66,11 +76,11 @@ public partial class WarningToaster
     }));
   }
 
-    public static void Toast(string messageEmail1 = "A", string messageAutor1 = "", string messageTheme1 = "[Без темы]", string messageEmail2 = "A", string messageAutor2 = "", string messageTheme2 = "[Без темы]", int timeActive = 3, 
+    public static void Toast(netoaster.Message _myMes1, netoaster.Message _myMes2, string messageEmail1 = "A", string messageAutor1 = "", string messageTheme1 = "[Без темы]", string messageEmail2 = "A", string messageAutor2 = "", string messageTheme2 = "[Без темы]", int timeActive = 3, 
             ToasterPosition position = ToasterPosition.PrimaryScreenBottomRight,ToasterAnimation animation = ToasterAnimation.SlideInFromRight,
             double margin = 10.0)
     {
-        var err = new WarningToaster(messageEmail1, messageAutor1, messageTheme1, messageEmail2, messageAutor2, messageTheme2, timeActive, position, animation, margin);
+        var err = new WarningToaster(_myMes1, _myMes2, messageEmail1, messageAutor1, messageTheme1, messageEmail2, messageAutor2, messageTheme2, timeActive, position, animation, margin);
         err.Show();
     }
 

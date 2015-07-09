@@ -20,23 +20,43 @@ namespace Email_Notifications
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class FirstLogin : Window
+    public partial class Login : Window
     {
         private static bool firstLogin = true;
         Imap myCon;
-        
-        public FirstLogin()
+        Client clientDB = new Client();
+        bool Edit = false;
+        string OldEmail;
+
+        public Login()
         {
             try
             {
+                clientDB.CreateDB();
+                //clientDB.DeleteAllEmail();
                 InitializeComponent();
                 this.Hide();
                 setLoginPosition();
                 Auth();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+        public Login(string email, string password)
+        {
+            try
+            {
+                OldEmail = email;
+                Edit = true;
+                InitializeComponent();
+                this.Hide();
+                setLoginPosition();
                 if (!firstLogin)
                 {
-                    textBoxLogin.Text = Settings._Adress;
-                    textBoxPassword.Password = Settings._Password;
+                    textBoxLogin.Text = email;
+                    textBoxPassword.Password = password;
                 }
             }
             catch (Exception ex)
@@ -44,23 +64,68 @@ namespace Email_Notifications
                 MessageBox.Show(ex.ToString());
             }
         }
+        public Login(int i)
+        {
+            try
+            {
+                clientDB.CreateDB();
+                //clientDB.DeleteAllEmail();
+                InitializeComponent();
+                this.Hide();
+                Login_setCenterPosition();
+                Auth();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+        public Login(string email, string password, int i)
+        {
+            try
+            {
+                OldEmail = email;
+                Edit = true;
+                InitializeComponent();
+                this.Hide();
+                Login_setCenterPosition();
+                if (!firstLogin)
+                {
+                    textBoxLogin.Text = email;
+                    textBoxPassword.Password = password;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+
+        private void Login_setCenterPosition()
+        {
+            double screenHeight = SystemParameters.FullPrimaryScreenHeight;
+            double screenWidth = SystemParameters.FullPrimaryScreenWidth;
+            this.Top = (screenHeight - this.Height) / 2;
+            this.Left = (screenWidth - this.Width) / 2;
+        }
         private void Auth()
         {
             try
             {
-                Settings.LoadSettings();
+                GlobalSettings.LoadSettings();
             }
-            catch
+            catch //(Exception ex)
             {
+                //MessageBox.Show(ex.ToString());
             }
-            int tmpcount = -1;
-            if (Settings._Adress != null)
+            var allUsers = clientDB.DisplayAllUsers();
+            if (allUsers.Count != 0)
             {
-                myCon = new Imap();
+                var clAllAcs = clientDB.AllAccount();
+                myCon = new Imap(Cryptography.Decrypt(allUsers[0]), Cryptography.Decrypt(clAllAcs[allUsers[0]]));
                 try
                 {
                     myCon.Connection();
-                    tmpcount = myCon.Connections.Inbox.Count;
                     if (firstLogin)
                     {
                         Tray myTray = new Tray();
@@ -69,10 +134,9 @@ namespace Email_Notifications
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.ToString());
+                    //MessageBox.Show(ex.ToString());
                     this.Show();
                 }
-
             }
             else
             {
@@ -101,56 +165,68 @@ namespace Email_Notifications
 
         private void buttonLogin_Click(object sender, RoutedEventArgs e)
         {
-            
-            bool CorrectLogin = (textBoxLogin.Text.Length>5 && textBoxLogin.Text.Length<50 && textBoxLogin.Text.Contains('@')),
-                CorrectPassword = (textBoxPassword.Password.Length > 3 && textBoxPassword.Password.Length < 50);
-            int count = -1;
-            if (CorrectLogin && CorrectPassword)
+            try
             {
-                try
+                bool CorrectLogin = (textBoxLogin.Text.Length > 5 && textBoxLogin.Text.Length < 50 && textBoxLogin.Text.Contains('@')),
+                    CorrectPassword = (textBoxPassword.Password.Length > 3 && textBoxPassword.Password.Length < 50);
+                int count = -1;
+                if (CorrectLogin && CorrectPassword)
                 {
-                    Settings.setSettings(textBoxLogin.Text, textBoxPassword.Password);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.ToString());
-                }
-                myCon = new Imap();
-                try
-                {
-                    myCon.Connection();
-                    count = myCon.Connections.Inbox.Count;
-
                     try
                     {
-                        Settings settin = Settings.GetInstance();
-                        Settings.SaveSettings(settin);
+                        myCon = new Imap(textBoxLogin.Text, textBoxPassword.Password);
+                        myCon.Connection();
+                        count = myCon.Connections.Inbox.Count;
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        MessageBox.Show("Не удалось сохранить настройки. Проверьте доступность диска и запустите программу от имени администратора.");
+                        //MessageBox.Show(ex.ToString());
+                        MessageBox.Show("Подключение не удалось. Проверьте правильность данных и наличие интернет соединения.");
                     }
-
                 }
-                catch(Exception ex)
+                else
                 {
-                    MessageBox.Show("Подключение не удалось. Проверьте правильность данных и наличие интернет соединения.");
-                    //MessageBox.Show(ex.ToString());
+                    MessageBox.Show("Ваши данные некорректны");
+                }
+                if (Edit)
+                {
+                    clientDB.UpdateEmail(Cryptography.Encrypt(OldEmail), Cryptography.Encrypt(textBoxLogin.Text), Cryptography.Encrypt(textBoxPassword.Password));
+                    this.Close();
+                }
+                else
+                {
+                    bool NeedIt = true;
+                    if (count != -1)
+                    {
+                        if (clientDB.DisplayAllUsers().Count != 0)
+                        {
+                            if (clientDB.DisplayAllUsers().Contains(Cryptography.Encrypt(textBoxLogin.Text)))
+                                NeedIt = false;
+                        }
+                        if (NeedIt)
+                        {
+                            clientDB.InsertUser(Cryptography.Encrypt(textBoxLogin.Text), Cryptography.Encrypt(textBoxPassword.Password), true);
+                            if (firstLogin)
+                            {
+                                this.Hide();
+                                Tray myTray = new Tray();
+                                firstLogin = false;
+                            }
+                            else
+                                this.Close();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Такой адрес уже есть");
+                        }
+                    }
                 }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Ваши данные некорректны");
-            }
-            if (count != -1)
-            {
-                Hide();
-                if (firstLogin)
-                {
-                    Tray myTray = new Tray();
-                    firstLogin = false;
-                }
+                MessageBox.Show(ex.ToString());
             }
         }
+
     }
 }
