@@ -64,6 +64,50 @@ namespace Email_Notifications
                 MessageBox.Show(ex.ToString());
             }
         }
+        public Login(int i)
+        {
+            try
+            {
+                clientDB.CreateDB();
+                //clientDB.DeleteAllEmail();
+                InitializeComponent();
+                this.Hide();
+                Login_setCenterPosition();
+                Auth();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+        public Login(string email, string password, int i)
+        {
+            try
+            {
+                OldEmail = email;
+                Edit = true;
+                InitializeComponent();
+                this.Hide();
+                Login_setCenterPosition();
+                if (!firstLogin)
+                {
+                    textBoxLogin.Text = email;
+                    textBoxPassword.Password = password;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+        }
+
+        private void Login_setCenterPosition()
+        {
+            double screenHeight = SystemParameters.FullPrimaryScreenHeight;
+            double screenWidth = SystemParameters.FullPrimaryScreenWidth;
+            this.Top = (screenHeight - this.Height) / 2;
+            this.Left = (screenWidth - this.Width) / 2;
+        }
         private void Auth()
         {
             try
@@ -90,7 +134,7 @@ namespace Email_Notifications
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.ToString());
+                    //MessageBox.Show(ex.ToString());
                     this.Show();
                 }
             }
@@ -133,20 +177,10 @@ namespace Email_Notifications
                         myCon = new Imap(textBoxLogin.Text, textBoxPassword.Password);
                         myCon.Connection();
                         count = myCon.Connections.Inbox.Count;
-
-                        try
-                        {
-                            GlobalSettings settin = GlobalSettings.GetInstance();
-                            GlobalSettings.SaveSettings(settin);
-                        }
-                        catch
-                        {
-                            MessageBox.Show("Не удалось сохранить настройки. Проверьте доступность диска и запустите программу от имени администратора.");
-                        }
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.ToString());
+                        //MessageBox.Show(ex.ToString());
                         MessageBox.Show("Подключение не удалось. Проверьте правильность данных и наличие интернет соединения.");
                     }
                 }

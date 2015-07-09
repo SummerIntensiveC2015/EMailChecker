@@ -66,6 +66,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="Message.cs" />
     <Compile Include="ToastSupport.cs" />
     <Compile Include="TwoMessage.xaml.cs">
       <DependentUpon>TwoMessage.xaml</DependentUpon>

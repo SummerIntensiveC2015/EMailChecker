@@ -35,6 +35,11 @@ namespace Email_Notifications
             SSL = true;
         }
 
+        public override string ToString()
+        {
+            return PopServer + " " + PopPort + " " + ImapServer + " " + ImapPort + " " + SSL;
+        }
+
     }
 }
 
