@@ -20,6 +20,5 @@ namespace netoaster
             textLetter = _textLetter;
             name = _name;
         }
-
     }
 }

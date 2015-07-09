@@ -107,8 +107,7 @@ namespace Email_Notifications
                         text.Clear();
                     }
                     //MessagesToShow.Remove(tempStr);
-                }
-                
+                }               
 
                 var actAccs = clientDB.ActiveAccount();
                 var actUsers = clientDB.DisplayActiveUsers();
@@ -136,7 +135,6 @@ namespace Email_Notifications
                                     while (NewMessagesCount > tempCount[actUsers[j]])
                                     {
                                         NewList.Add(NewImap.DownloadMessage(tempCount[actUsers[j]]));
-                                        MimeMessage m = NewImap.DownloadMessage(tempCount[actUsers[j]]);
                                         tempCount[actUsers[j]]++;
                                         clientDB.UpdateAccountMessages(actUsers[j], tempCount[actUsers[j]]);
                                     }
@@ -147,8 +145,7 @@ namespace Email_Notifications
                                     else
                                     {
                                         MessagesToShow[actUsers[j]].AddRange(NewList);
-                                    }
-                                    
+                                    }                                    
                                 }
                                 else
                                 {
@@ -156,8 +153,9 @@ namespace Email_Notifications
                                 }
                                 NewImap.Disconnection();
                             }
-                            catch
+                            catch //(Exception ex)
                             {
+                                //MessageBox.Show(ex.ToString());
                             }
                         });
                 }
@@ -167,43 +165,59 @@ namespace Email_Notifications
                 }
                 //Task.WaitAll(TaskArr);
             }
-            catch (Exception ex)
+            catch //(Exception ex)
             {
                 //MessageBox.Show(ex.ToString());
                 MessageBox.Show("Не удалось загрузить письмо. Уведомления остановлены");
-                stopTimer(new object(),new RoutedEventArgs());
+                stopTimer((object)tbiField.ContextMenu.Items[1], new RoutedEventArgs());
             }
         }
 
         private void ShowToaster(List<string> _text, List<string> _addres, List<string> _name, List<string> _theme, string email)
         {
-            int countOfElement = _addres.Count;
-            if (countOfElement == 1)
+            try
             {
-                Message m = new Message(email, _addres[0], _theme[0], _text[0], _name[0]);
-                SuccessToaster.Toast(m, _addres[0], _name[0], _theme[0], GlobalSettings.NotificationLiveTimeInSeconds, ToasterPosition.PrimaryScreenBottomRight, animation: ToasterAnimation.FadeIn, margin: 20.0);
+                int countOfElement = _addres.Count;
+                if (countOfElement == 1)
+                {
+                    Message m = new Message(email, _addres[0], _theme[0], _text[0], _name[0]);
+                    SuccessToaster.Toast(m, _addres[0], _name[0], _theme[0], GlobalSettings.NotificationLiveTimeInSeconds, ToasterPosition.PrimaryScreenBottomRight, animation: ToasterAnimation.FadeIn, margin: 20.0);
 
-            }
-            else if (countOfElement == 2)
-            {
-                Message m1 = new Message(email, _addres[countOfElement - 1], _theme[countOfElement - 1], _text[countOfElement - 1], _name[countOfElement - 1]),
-                   m2 = new Message(email, _addres[countOfElement - 2], _theme[countOfElement - 2], _text[countOfElement - 2], _name[countOfElement - 2]);
-                WarningToaster.Toast(m1, m2, _addres[countOfElement - 1], _name[countOfElement - 1], _theme[countOfElement - 1], _addres[countOfElement - 2], _name[countOfElement - 2], _theme[countOfElement - 2], GlobalSettings.NotificationLiveTimeInSeconds, ToasterPosition.PrimaryScreenBottomRight, animation: ToasterAnimation.FadeIn, margin: 20.0);
+                }
+                else if (countOfElement == 2)
+                {
+                    Message m1 = new Message(email, _addres[countOfElement - 1], _theme[countOfElement - 1], _text[countOfElement - 1], _name[countOfElement - 1]),
+                       m2 = new Message(email, _addres[countOfElement - 2], _theme[countOfElement - 2], _text[countOfElement - 2], _name[countOfElement - 2]);
+                    WarningToaster.Toast(m1, m2, _addres[countOfElement - 1], _name[countOfElement - 1], _theme[countOfElement - 1], _addres[countOfElement - 2], _name[countOfElement - 2], _theme[countOfElement - 2], GlobalSettings.NotificationLiveTimeInSeconds, ToasterPosition.PrimaryScreenBottomRight, animation: ToasterAnimation.FadeIn, margin: 20.0);
 
+                }
+                else if (countOfElement >= 3)
+                {
+                    Message m1 = new Message(email, _addres[countOfElement - 1], _theme[countOfElement - 1], _text[countOfElement - 1], _name[countOfElement - 1]),
+                        m2 = new Message(email, _addres[countOfElement - 2], _theme[countOfElement - 2], _text[countOfElement - 2], _name[countOfElement - 2]),
+                        m3 = new Message(email, _addres[countOfElement - 3], _theme[countOfElement - 3], _text[countOfElement - 3], _name[countOfElement - 3]);
+                    ErrorToaster.Toast(m1, m2, m2, _addres[countOfElement - 1], _name[countOfElement - 1], _theme[countOfElement - 1], _addres[countOfElement - 2], _name[countOfElement - 2], _theme[countOfElement - 2], _addres[countOfElement - 3], _name[countOfElement - 3], _theme[countOfElement - 3], GlobalSettings.NotificationLiveTimeInSeconds, countOfElement, ToasterPosition.PrimaryScreenBottomRight, animation: ToasterAnimation.FadeIn, margin: 20.0);
+                }
             }
-            else if (countOfElement >= 3)
+            catch (NullReferenceException exNull)
             {
-                Message m1 = new Message(email, _addres[countOfElement - 1], _theme[countOfElement - 1], _text[countOfElement - 1], _name[countOfElement - 1]),
-                    m2 = new Message(email, _addres[countOfElement - 2], _theme[countOfElement - 2], _text[countOfElement - 2], _name[countOfElement - 2]),
-                    m3 = new Message(email, _addres[countOfElement - 3], _theme[countOfElement - 3], _text[countOfElement - 3], _name[countOfElement - 3]);
-                ErrorToaster.Toast(m1, m2, m2, _addres[countOfElement - 1], _name[countOfElement - 1], _theme[countOfElement - 1], _addres[countOfElement - 2], _name[countOfElement - 2], _theme[countOfElement - 2], _addres[countOfElement - 3], _name[countOfElement - 3], _theme[countOfElement - 3], GlobalSettings.NotificationLiveTimeInSeconds, countOfElement, ToasterPosition.PrimaryScreenBottomRight, animation: ToasterAnimation.FadeIn, margin: 20.0);
-            }                    
+                _theme = new List<string>();
+                for (int i = _addres.Count; i > 0; i--)
+                {
+                    _theme.Add("<Без темы>");
+                }
+                ShowToaster(_text, _addres, _name, _theme, email);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
 
         public void SetServerCheckInterval()
         {
             timerField.Interval = new TimeSpan(0, GlobalSettings.ServerCheckTimeInMinutes, 0);
-            //timerField.Interval = new TimeSpan(0, 0, 25);
+            //timerField.Interval = new TimeSpan(0, 0, 10);
         }
 
         private void OpenBrowser(object sender, RoutedEventArgs e)
@@ -235,21 +249,21 @@ namespace Email_Notifications
 
         private void stopTimer(object sender, RoutedEventArgs e)
         {
-            if (timerField.IsEnabled)
-            {
-                GlobalSettings.NotificationsEnabled = false;
-                timerField.Stop();
-                tbiField.ToolTipText = "Программа остановлена";
-                (sender as System.Windows.Controls.MenuItem).Header = "Включить оповещения";
-            }
-            else
-            {
-                GlobalSettings.NotificationsEnabled = true;
-                tbiField.ToolTipText = "Программа работает";
-                (sender as System.Windows.Controls.MenuItem).Header = "Не беспокоить";
-                SetServerCheckInterval();
-                timerField.Start();
-            }
+                if (timerField.IsEnabled)
+                {
+                    GlobalSettings.NotificationsEnabled = false;
+                    timerField.Stop();
+                    tbiField.ToolTipText = "Программа остановлена";
+                    (sender as System.Windows.Controls.MenuItem).Header = "Включить оповещения";
+                }
+                else
+                {
+                    GlobalSettings.NotificationsEnabled = true;
+                    tbiField.ToolTipText = "Программа работает";
+                    (sender as System.Windows.Controls.MenuItem).Header = "Не беспокоить";
+                    SetServerCheckInterval();
+                    timerField.Start();
+                }
         }
 
         private void PostChange(object sender, RoutedEventArgs e)
