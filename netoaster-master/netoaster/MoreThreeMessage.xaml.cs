@@ -7,8 +7,8 @@ using System.Diagnostics;
 
 public partial class ErrorToaster
 {
-    public static string email;
-    private ErrorToaster(string messageEmail1, string messageAutor1, string messageTheme1, string messageEmail2, string messageAutor2, string messageTheme2, string messageEmail3, string messageAutor3, string messageTheme3, int timeActive, int countNewMessage, ToasterPosition position, ToasterAnimation animation, double margin)
+    public string email;
+    private ErrorToaster(netoaster.Message myMessage1, netoaster.Message myMessage2, netoaster.Message myMessage3, string messageEmail1, string messageAutor1, string messageTheme1, string messageEmail2, string messageAutor2, string messageTheme2, string messageEmail3, string messageAutor3, string messageTheme3, int timeActive, int countNewMessage, ToasterPosition position, ToasterAnimation animation, double margin)
     {
         InitializeComponent();
 
@@ -21,6 +21,17 @@ public partial class ErrorToaster
         avatar1.Fill = brushes[rnd.Next(brushes.Length)];
         avatar2.Fill = brushes[rnd.Next(brushes.Length)];
         avatar3.Fill = brushes[rnd.Next(brushes.Length)];
+
+        email=myMessage1.emailUser;
+        if (!(myMessage1.emailUser.Length > "summerintensiveemailcheckertest".Length))
+        {
+            EmailTo.Text = "Пришло на адрес: " + myMessage1.emailUser;
+        }
+        else
+        {
+            EmailTo.Text = "Пришло на адрес: " + myMessage1.emailUser.Remove("summerintensiveemailcheckertest".Length - 3) + "...";
+        }
+
         var msgAutor1 = (System.Windows.Documents.Run)ErrorToasterInstance.FindName("autorname1");
         if (msgAutor1 != null) msgAutor1.Text = messageAutor1 ?? string.Empty;
         var msgTheme1 = (System.Windows.Documents.Run)ErrorToasterInstance.FindName("themetext1");
@@ -99,10 +110,10 @@ public partial class ErrorToaster
     }
 
     public static void Toast(
-       string messageEmail1, string messageAutor1 = "", string messageTheme1 = "", string messageEmail2 = "", string messageAutor2 = "", string messageTheme2 = "", string messageEmail3 = "", string messageAutor3 = "", string messageTheme3 = "", int timeActive = 3, int countNewMessage=0, ToasterPosition position = ToasterPosition.PrimaryScreenBottomRight, ToasterAnimation animation = ToasterAnimation.SlideInFromRight,
+       netoaster.Message _myMes1, netoaster.Message _myMes2, netoaster.Message _myMes3, string messageEmail1, string messageAutor1 = "", string messageTheme1 = "", string messageEmail2 = "", string messageAutor2 = "", string messageTheme2 = "", string messageEmail3 = "", string messageAutor3 = "", string messageTheme3 = "", int timeActive = 3, int countNewMessage = 0, ToasterPosition position = ToasterPosition.PrimaryScreenBottomRight, ToasterAnimation animation = ToasterAnimation.SlideInFromRight,
         double margin = 10.0)
     {
-        var err = new ErrorToaster(messageEmail1,messageAutor1,messageTheme1,messageEmail2,messageAutor2,messageTheme2,messageEmail3,messageAutor3,messageTheme3,timeActive, countNewMessage, position, animation, margin);
+        var err = new ErrorToaster(_myMes1, _myMes2, _myMes3, messageEmail1, messageAutor1, messageTheme1, messageEmail2, messageAutor2, messageTheme2, messageEmail3, messageAutor3, messageTheme3, timeActive, countNewMessage, position, animation, margin);
         err.Show();
     }
 

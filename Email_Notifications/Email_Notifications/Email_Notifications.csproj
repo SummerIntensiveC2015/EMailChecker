@@ -81,26 +81,12 @@
     <Compile Include="Cryptography.cs" />
     <Compile Include="GlobalSettings.cs" />
     <Compile Include="Imap.cs" />
-    <Compile Include="Interval.xaml.cs">
-      <DependentUpon>Interval.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MailAddressSelection.xaml.cs">
-      <DependentUpon>MailAddressSelection.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="SecondsInterval.xaml.cs">
-      <DependentUpon>SecondsInterval.xaml</DependentUpon>
+    <Compile Include="SetSettings.xaml.cs">
+      <DependentUpon>SetSettings.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="sqlClass.cs" />
     <Compile Include="Tray.cs" />
-    <Page Include="Interval.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MailAddressSelection.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -113,7 +99,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="SecondsInterval.xaml">
+    <Page Include="SetSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

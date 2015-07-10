@@ -21,9 +21,6 @@ namespace Email_Notifications
         private Dictionary<string, int> accauntsMessages = new Dictionary<string, int>();
 
 
-        /// <summary>
-        /// не работает
-        /// </summary>
         public void CreateDB()
         {
             if (File.Exists(sPath))
@@ -46,7 +43,40 @@ namespace Email_Notifications
             mydb.iExecuteNonQuery(sPath, sSql, 0);
             mydb = null;
         }
+        public DataRow[] DisplayAllUsersActive()
+        {
+            DataRow[] allaccount;
+            mydb = new sqlClass();
+            sSql = "select Email, Active from  User";
+            allaccount = mydb.drExecute(sPath, sSql);
+            if (allaccount == null)
+            {
+                mydb = null;
+                return null;
+            }
+            return allaccount;
+        }
+        public DataView ShowUser(DataRow[] dr)
+        {
+            DataTable table = new DataTable();
+            DataColumn column;
 
+            column = new DataColumn();
+            column.DataType = System.Type.GetType("System.String");
+            column.ColumnName = "Адрес почты";
+            table.Columns.Add(column);
+
+            column = new DataColumn();
+            column.DataType = Type.GetType("System.Boolean");
+            column.ColumnName = "Активность";
+            table.Columns.Add(column);
+
+            foreach (DataRow search in dr)
+            {
+                table.Rows.Add(Cryptography.Decrypt((search[0] as string)), search[1]);
+            }
+            return new DataView(table);
+        }
         public Dictionary<string, int> GetAccountMessages()
         {
             accauntsMessages = new Dictionary<string, int>();
@@ -193,7 +223,6 @@ namespace Email_Notifications
             }
             return activeusers;
             }
-
         }
         public List<string> DisplayAllUsers()
         {

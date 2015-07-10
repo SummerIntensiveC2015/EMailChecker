@@ -9,8 +9,8 @@ using System.Diagnostics;
 
 public partial class SuccessToaster
 {
-    public static string email;
-    private SuccessToaster(string messageEmail, string messageAutor,string messageTheme, int timeActive, ToasterPosition position, ToasterAnimation animation, double margin)
+    public string email;
+    private SuccessToaster(Message myMessage, string messageEmail, string messageAutor, string messageTheme, int timeActive, ToasterPosition position, ToasterAnimation animation, double margin)
     {
          
 
@@ -22,6 +22,9 @@ public partial class SuccessToaster
         };
         Random rnd = new Random();
         avatar.Fill = brushes[rnd.Next(brushes.Length)];
+
+        email = myMessage.emailUser;
+        EmailTo.Text="Пришло на адрес: "+myMessage.emailUser;
         
         var msgAutor = (System.Windows.Documents.Run)SuccessToasterInstance.FindName("autorname");
         if (msgAutor != null) msgAutor.Text = messageAutor ?? string.Empty;
@@ -51,11 +54,11 @@ public partial class SuccessToaster
         }));
     }
 
-    public static void Toast(string messageEmail="A", string messageAutor = "", string messageTheme = "[Без темы]", int timeActive=3,
+    public static void Toast(Message myMessage, string messageEmail="A", string messageAutor = "", string messageTheme = "[Без темы]", int timeActive=3,
         ToasterPosition position = ToasterPosition.PrimaryScreenTopRight, ToasterAnimation animation = ToasterAnimation.SlideInFromRight,
         double margin = 10.0)
     {
-        var err = new SuccessToaster(messageEmail, messageAutor, messageTheme, timeActive, position, animation, margin);
+        var err = new SuccessToaster(myMessage, messageEmail, messageAutor, messageTheme, timeActive, position, animation, margin);
         err.Show();
     }
 

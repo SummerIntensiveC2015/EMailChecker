@@ -23,7 +23,7 @@ namespace Email_Notifications
      */
     class Imap
     {
-        private Settings currentSettings;
+        public Settings currentSettings;
         public string currentEmail;
         private string currentPassword;
 

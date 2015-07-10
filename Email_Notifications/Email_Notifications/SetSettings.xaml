@@ -1,0 +1,59 @@
+﻿<Window x:Class="Email_Notifications.SetSettings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="SetSettings" Height="400" Width="470" AllowsTransparency="True" WindowStyle="None" Opacity="0.95" ShowInTaskbar="False" Topmost="True">
+    <Grid>
+        <TabControl HorizontalAlignment="Left" Height="380" Margin="10,10,0,0" VerticalAlignment="Top" Width="450">
+            <TabItem Header="Пользователь" Background="White">
+                <Grid Background="White" Margin="0,-1,0,1">
+                    <DataGrid x:Name="DataGridUsers"  HorizontalAlignment="Left" VerticalAlignment="Top" Height="266" Width="420" IsReadOnly="True" Margin="10,40,0,0" GridLinesVisibility="None" Background="White" CurrentCellChanged="DataGridUsers_CurrentCellChanged">
+                    </DataGrid>
+                    <Label Content="Активность адресов" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="160" FontSize="16" Height="30"/>
+                    <Button Content="Правка" HorizontalAlignment="Left" Margin="90,311,0,0" VerticalAlignment="Top" Width="75" Height="27" Click="Button_Click_3" Background="White"/>
+                    <Button Content="Удалить" HorizontalAlignment="Left" Margin="170,311,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1" Height="27" Background="White"/>
+                    <Button Content="Добавить" HorizontalAlignment="Left" Margin="10,311,0,0" VerticalAlignment="Top" Width="75" Height="27" Click="Button_Click_2" Background="White"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Система" Background="White">
+                <Grid Background="White">
+                    <Label Content="Частота запросов" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontSize="22"/>
+                    <Label Content="Время активности уведомления" HorizontalAlignment="Left" Margin="10,152,0,0" VerticalAlignment="Top" FontSize="22"/>
+                    <Label Content="Один раз в" HorizontalAlignment="Left" Margin="27,93,0,0" VerticalAlignment="Top" FontSize="16"/>
+                    <Label Content="минут" HorizontalAlignment="Left" Margin="267,93,0,0" VerticalAlignment="Top" FontSize="16" Width="76"/>
+                    <Label Content="секунд" HorizontalAlignment="Left" Margin="267,228,0,0" VerticalAlignment="Top" FontSize="16" Width="76"/>
+                    <Button x:Name="buttonGlobalSettingsApply" Content="Применить" HorizontalAlignment="Left" Margin="296,303,0,0" VerticalAlignment="Top" Width="134" BorderBrush="Black" FontSize="22" Background="White" Click="buttonGlobalSettingsApply_Click"/>
+
+                    <Grid Margin="137,228,200,89">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="27" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="13" />
+                            <RowDefinition Height="13" />
+                        </Grid.RowDefinitions>
+                        <TextBox Name="NUDTextBoxSeconds"  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" TextAlignment="Right" PreviewKeyDown="NUDTextBoxSeconds_PreviewKeyDown" PreviewKeyUp="NUDTextBoxSeconds_PreviewKeyUp" TextChanged="NUDTextBoxSeconds_TextChanged"/>
+                        <RepeatButton Name="NUDButtonUPSeconds"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="NUDButtonUPSeconds_Click">5</RepeatButton>
+                        <RepeatButton Name="NUDButtonDownSeconds"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Click="NUDButtonDownSeconds_Click">6</RepeatButton>
+                    </Grid>
+
+                    <Grid Margin="137,93,200,224">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="27" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="13" />
+                            <RowDefinition Height="13" />
+                        </Grid.RowDefinitions>
+                        <TextBox Name="NUDTextBox"  Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" TextAlignment="Right" PreviewKeyDown="NUDTextBox_PreviewKeyDown" PreviewKeyUp="NUDTextBox_PreviewKeyUp" TextChanged="NUDTextBox_TextChanged"/>
+                        <RepeatButton Name="NUDButtonUP"  Grid.Column="1" Grid.Row="0" FontSize="8" FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="NUDButtonUP_Click">5</RepeatButton>
+                        <RepeatButton Name="NUDButtonDown"  Grid.Column="1" Grid.Row="1" FontSize="8"  FontFamily="Marlett" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="13" VerticalAlignment="Bottom" Click="NUDButtonDown_Click">6</RepeatButton>
+                    </Grid>
+
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <Button x:Name="buttonClose" Content="X" HorizontalAlignment="Left" Margin="425,0,0,0" VerticalAlignment="Top" Width="45" Height="32" RenderTransformOrigin="0.527,0.225" FontSize="22" FontWeight="Bold" FontStyle="Italic" FontFamily="Segoe UI Black" BorderBrush="White" Background="White" Click="Button_Click"/>
+    </Grid>
+</Window>
