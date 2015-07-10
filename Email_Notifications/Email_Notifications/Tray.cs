@@ -90,7 +90,10 @@ namespace Email_Notifications
                         addresFrom = from.Split(' ').Last();
                         address.Add(addresFrom.Substring(1, addresFrom.Length - 1));
                         name.Add(m.From[0].Name);
-                        theme.Add(m.Subject);
+                        if (m.Subject != null)
+                            theme.Add(m.Subject);
+                        else
+                            theme.Add("<Без темы>");
                         text.Add(m.TextBody);
                         count++;
                         //MessageBox.Show(Cryptography.Decrypt(tempStr) + " " + m.Subject);
@@ -175,8 +178,8 @@ namespace Email_Notifications
 
         private void ShowToaster(List<string> _text, List<string> _addres, List<string> _name, List<string> _theme, string email)
         {
-            try
-            {
+            //try
+            //{
                 int countOfElement = _addres.Count;
                 if (countOfElement == 1)
                 {
@@ -198,20 +201,11 @@ namespace Email_Notifications
                         m3 = new Message(email, _addres[countOfElement - 3], _theme[countOfElement - 3], _text[countOfElement - 3], _name[countOfElement - 3]);
                     ErrorToaster.Toast(m1, m2, m2, _addres[countOfElement - 1], _name[countOfElement - 1], _theme[countOfElement - 1], _addres[countOfElement - 2], _name[countOfElement - 2], _theme[countOfElement - 2], _addres[countOfElement - 3], _name[countOfElement - 3], _theme[countOfElement - 3], GlobalSettings.NotificationLiveTimeInSeconds, countOfElement, ToasterPosition.PrimaryScreenBottomRight, animation: ToasterAnimation.FadeIn, margin: 20.0);
                 }
-            }
-            catch (NullReferenceException exNull)
-            {
-                _theme = new List<string>();
-                for (int i = _addres.Count; i > 0; i--)
-                {
-                    _theme.Add("<Без темы>");
-                }
-                ShowToaster(_text, _addres, _name, _theme, email);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show(ex.ToString());
+            //}
         }
 
         public void SetServerCheckInterval()
