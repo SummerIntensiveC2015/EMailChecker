@@ -1,6 +1,6 @@
-*.obj
-*.exe
-*.pdb
+#Ignore thumbnails created by Windows
+Thumbs.db
+#Ignore files built by Visual Studio
 *.user
 *.aps
 *.pch
@@ -9,10 +9,13 @@
 *_p.c
 *.ncb
 *.suo
-*.tlb
-*.tlh
 *.bak
 *.cache
 *.ilk
 *.log
-*.txt
+[Bb]in
+[Dd]ebug*/
+*.sbr
+obj/
+[Rr]elease*/
+_ReSharper*/
