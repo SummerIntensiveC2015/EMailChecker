@@ -82,19 +82,14 @@ public partial class ErrorToaster
 
         if (countNewMessage > 0)
         {
-            fullinfo.Content = "Новых писем -" + " " + countNewMessage.ToString();
+            fullinfo.Content = "Новых писем - " + countNewMessage.ToString();
             fullinfo.Visibility = System.Windows.Visibility.Visible;
             rectang.Visibility = System.Windows.Visibility.Visible;
-            this.Height = 252;
-            bord.Height = 252;
         }
         else
         {
             fullinfo.Visibility = System.Windows.Visibility.Hidden;
-            this.Height = 240;
-            bord.Height = 240;
             rectang.Visibility = System.Windows.Visibility.Hidden;
-
         }
 
         Storyboard story = ToastSupport.GetAnimation(animation, ref ErrorToasterInstance, timeActive);
@@ -113,7 +108,11 @@ public partial class ErrorToaster
        netoaster.Message _myMes1, netoaster.Message _myMes2, netoaster.Message _myMes3, string messageEmail1, string messageAutor1 = "", string messageTheme1 = "", string messageEmail2 = "", string messageAutor2 = "", string messageTheme2 = "", string messageEmail3 = "", string messageAutor3 = "", string messageTheme3 = "", int timeActive = 3, int countNewMessage = 0, ToasterPosition position = ToasterPosition.PrimaryScreenBottomRight, ToasterAnimation animation = ToasterAnimation.SlideInFromRight,
         double margin = 10.0)
     {
-        var err = new ErrorToaster(_myMes1, _myMes2, _myMes3, messageEmail1, messageAutor1, messageTheme1, messageEmail2, messageAutor2, messageTheme2, messageEmail3, messageAutor3, messageTheme3, timeActive, countNewMessage, position, animation, margin);
+        var err = new ErrorToaster(_myMes1, _myMes2, _myMes3,
+                                    messageEmail1, messageAutor1, messageTheme1,
+                                    messageEmail2, messageAutor2, messageTheme2,
+                                    messageEmail3, messageAutor3, messageTheme3,
+                                    timeActive, countNewMessage, position, animation, margin);
         err.Show();
     }
 
